@@ -3,7 +3,7 @@ export default interface Usuario {
     nome: string;
     email: string;
     senha: string;
-    objetivo: string;
+    objetivo: 'emagrecer' | 'hipertrofia' | 'geral';
     endereco: string;
     token: string;
 }

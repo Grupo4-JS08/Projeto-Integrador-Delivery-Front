@@ -1,5 +1,6 @@
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 
+
 function Home() {
     return (
         <div className="w-full">
@@ -13,7 +14,6 @@ function Home() {
                         alt="Fundo"
                         className="absolute inset-0 w-full h-full object-cover opacity-20 rounded-lg"
                     />
-
                     {/* Texto */}
                     <div className="relative z-10 mb-4 md:mb-0">
                         <h2 className="text-3xl font-bold mb-4 text-orange-500">Mais pedido</h2>
@@ -26,6 +26,7 @@ function Home() {
                             </button>
                         </div>
                     </div>
+
 
                     {/* Imagem + Avaliação */}
                     <div className="relative z-10">

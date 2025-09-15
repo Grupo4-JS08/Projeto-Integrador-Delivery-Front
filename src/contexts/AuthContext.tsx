@@ -25,7 +25,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     nome: "",
     email: "",
     senha: "",
-    objetivo: "",
+    objetivo: "geral",
     endereco: "",
     token: "",
   });

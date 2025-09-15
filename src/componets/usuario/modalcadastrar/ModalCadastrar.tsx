@@ -23,7 +23,7 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
     nome: "",
     email: "",
     senha: "",
-    objetivo: "",
+    objetivo: "geral",
     endereco: "",
     token: "",
   });
@@ -58,17 +58,24 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
       }
       setIsLoading(false);
     } else {
-    //   ToastAlerta(
-    //     "Dados do usuário inconsistentes! Verifique as informações.",
-    //     "erro"
-    //   );
+      //   ToastAlerta(
+      //     "Dados do usuário inconsistentes! Verifique as informações.",
+      //     "erro"
+      //   );
       setUsuario({ ...usuario, senha: "" });
       setConfirmarSenha("");
     }
   }
 
+  function handleChange(e: ChangeEvent<HTMLSelectElement>) {
+    setUsuario({
+      ...usuario,
+      objetivo: e.target.value, // atualiza objetivo corretamente
+    });
+  }
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-60">
       <div className="bg-white rounded-xl p-8 w-full max-w-lg relative text-center shadow-xl overflow-y-auto max-h-[95vh]">
 
         {/* Botão Fechar */}
@@ -185,13 +192,18 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
 
           <div>
             <label htmlFor="objetivo">Objetivo</label>
-            <input
-              type="text"
+            <select
               id="objetivo"
               name="objetivo"
-              placeholder="Ex: Cliente ou Restaurante"
+              value={usuario.objetivo} // <- controlado pelo estado
+              onChange={handleChange}
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
-            />
+            >
+              <option value="">Selecione uma opção</option>
+              <option value="emagrecer">Emagrecer</option>
+              <option value="hipertrofia">Hipertrofia</option>
+              <option value="geral">Geral</option>
+            </select>
           </div>
 
           <button
