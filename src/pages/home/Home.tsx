@@ -124,87 +124,7 @@ function Home() {
 
   return (
     <>
-      <div className="w-full">
-        {/* BANNER */}
-        <section className="container mx-auto mt-6">
-          <div className="relative bg-[#7E8C54] flex flex-col md:flex-row items-center justify-between p-6 rounded-lg text-white shadow-md overflow-hidden">
-            <img
-              src="/comida.jpg"
-              alt="Fundo"
-              className="absolute inset-0 w-full h-full object-cover opacity-20 rounded-lg" />
-            <div className="relative z-10 mb-4 md:mb-0">
-              <h2 className="text-3xl font-bold mb-4 text-orange-500">Mais pedido</h2>
-              <div className="flex flex-wrap gap-3">
-                <button className="px-4 py-2 bg-white text-gray-900 rounded-full text-sm shadow hover:opacity-90">
-                  Receba nossas novidades
-                </button>
-                <button className="px-4 py-2 bg-white text-gray-900 rounded-full text-sm shadow hover:opacity-90">
-                  Delivery em 20-25 min
-                </button>
-              </div>
-            </div>
-            <div className="relative z-10">
-              <img
-                src="/comida.jpg"
-                alt="Prato"
-                className="w-125 h-50 object-cover rounded-lg" />
-              <img
-                src="/avalicao.png"
-                alt="Avaliação"
-                className="absolute bottom-2 left-2 w-17 h-auto rounded shadow" />
-            </div>
-          </div>
-        </section>
 
-
-
-        {/* SEÇÃO CATEGORIAS */}
-        <section className="container mx-auto mt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Nossas Categorias</h2>
-            <div className="relative mt-2 md:mt-0">
-              <input
-                type="text"
-                placeholder="Pesquisar"
-                className="pl-10 pr-4 py-2 border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF9800]"
-              />
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-            </div>
-          </div>
-
-          <div className="bg-[#7E8C54] flex items-center justify-between px-8 py-4 rounded">
-            <button className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90">
-              Contato
-            </button>
-
-            <div className="flex-1 flex justify-center space-x-4 overflow-x-auto">
-              <button
-                onClick={() => setCategoriaSelecionada("")}
-                className={`px-4 py-2 rounded-full text-white font-semibold ${
-                  categoriaSelecionada === "" ? "bg-[#FF9800]" : "bg-transparent"
-                }`}
-              >
-                Todos
-              </button>
-
-              {categorias.map((categoria) => (
-                <button
-                  key={categoria.id}
-                  onClick={() => setCategoriaSelecionada(categoria.nome)}
-                  className={`px-4 py-2 rounded-full text-white font-semibold whitespace-nowrap ${
-                    categoriaSelecionada === categoria.nome ? "bg-[#FF9800]" : "bg-transparent"
-                  }`}
-                >
-                  {categoria.nome}
-                </button>
-              ))}
-            </div>
-
-            <div className="bg-[#7E8C54] p-2 rounded-full flex items-center justify-center">
-              <FaShoppingCart className="text-white text-2xl cursor-pointer hover:scale-110 transition" />
-            </div>
-          </div>
-        </section>
 
         <div className="w-full">
             {/* BANNER */}
@@ -244,6 +164,7 @@ function Home() {
                 </div>
             </section>
         </div>
+
 
         {/* SEÇÃO CARDS DE PROMOÇÕES */}
             <section className="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -286,7 +207,7 @@ function Home() {
                     <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">-100%</span>
                 </a>
             </section>
-            
+
 
         {/* SEÇÃO PRINCIPAL DE PRODUTOS */}
         <section className="container mx-auto mt-12">
@@ -324,7 +245,7 @@ function Home() {
             </section>
           );
         })}
-      </div>
+ 
       <FooterInfo />
     </>
   );
