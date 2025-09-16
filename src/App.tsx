@@ -4,7 +4,12 @@ import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './componets/navbar/NavBar';
 import Home from './pages/home/Home';
 import Produtos from './pages/produtos/Produtos';
+
+//import Categorias from './pages/categorias/Categorias';
+import FooterInfo from './componets/footerinfo/FooterInfo';
+
 // import Categorias from './pages/categorias/Categorias';
+
 import Footer from './componets/footer/Footer';
 import Contato from './pages/contato/Contato';
 function App() {

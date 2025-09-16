@@ -21,7 +21,6 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
 
   const [usuarioLogin, setUsuarioLogin] = useState({
     usuario: "",
-    email: "",
     senha: "",
   });
 
@@ -116,9 +115,11 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
           <div className="relative">
             <input
               type="email"
-              name="email"
+
+              name="usuario"
               placeholder="Email"
-              value={usuarioLogin.email}
+              value={usuarioLogin.usuario}
+
               onChange={atualizarEstado}
               className="w-full px-4 py-2 pr-10 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
               required
@@ -179,3 +180,4 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
 
 
 export default ModalLogin2;
+

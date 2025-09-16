@@ -1,19 +1,18 @@
-// src/components/navbar/Navbar.tsx
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useContext, useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
-// seus paths originais
 import ModalLogin from "../usuario/modallogin/ModalLogin";
 import ModalLogin2 from "../usuario/modallogin2/ModalLogin2";
 import ModalCadastro from "../usuario/modalcadastrar/ModalCadastrar";
+import { AuthContext } from "../../contexts/AuthContext";
 
 function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isLogin2Open, setIsLogin2Open] = useState(false);
   const [isCadastroOpen, setIsCadastroOpen] = useState(false);
+  const { usuario, handleLogout } = useContext(AuthContext);
 
-  // Fecha todos (garante que só um modal fique aberto de cada vez)
   const closeAllModals = () => {
     setIsLoginOpen(false);
     setIsLogin2Open(false);
@@ -57,15 +56,18 @@ function Navbar() {
 
   // Fluxos a partir do ModalLogin (passo 1)
   const handleGoToLogin2 = () => {
-    // fecha o ModalLogin e abre o ModalLogin2
     setIsLoginOpen(false);
     setIsLogin2Open(true);
   };
 
   const handleGoToCadastro = () => {
-    // fecha o ModalLogin e abre o ModalCadastro
     setIsLoginOpen(false);
     setIsCadastroOpen(true);
+  };
+
+  const handleLogoutClick = () => {
+    handleLogout();
+    closeAllModals();
   };
 
   return (
@@ -83,27 +85,41 @@ function Navbar() {
             <div className="flex rounded-full overflow-hidden border border-gray-200">
               <Link
                 to="/ofertas"
-                className="px-4 py-2 bg-[#7E8C54] text-black font-semibold text-sm hover:opacity-90 transition rounded-l-full text-center"
+                className="px-4 py-2 bg-[#7E8C54] text-white font-semibold text-sm hover:opacity-90 transition rounded-l-full text-center"
               >
                 Ofertas
               </Link>
               <Link
                 to="/contato"
-                className="px-4 py-2 bg-[#FFF5DC] text-black font-semibold text-sm hover:opacity-90 transition rounded-full -ml-4"
+                className="px-4 py-2 bg-[#FFF5DC] text-black font-semibold text-sm hover:opacity-90 transition rounded-r-full"
               >
                 Contato
               </Link>
             </div>
 
-            {/* Botão que abre o ModalLogin (passo 1) */}
-            <button
-              type="button"
-              onClick={handleOpenLogin}
-              className="flex items-center space-x-2 px-5 py-2 rounded-full bg-[#FF9800] text-black font-semibold text-sm hover:opacity-90 transition"
-            >
-              <FaUser />
-              <span>Login</span>
-            </button>
+            {/* Botão de Login/Logout */}
+            {usuario.token ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-gray-700">Olá, {usuario.nome}</span>
+                <button
+                  type="button"
+                  onClick={handleLogoutClick}
+                  className="flex items-center space-x-2 px-5 py-2 rounded-full bg-[#FF9800] text-black font-semibold text-sm hover:opacity-90 transition"
+                >
+                  <FaUser />
+                  <span>Sair</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleOpenLogin}
+                className="flex items-center space-x-2 px-5 py-2 rounded-full bg-[#FF9800] text-black font-semibold text-sm hover:opacity-90 transition"
+              >
+                <FaUser />
+                <span>Login</span>
+              </button>
+            )}
           </div>
         </div>
       </nav>
@@ -112,8 +128,9 @@ function Navbar() {
       <ModalLogin
         isOpen={isLoginOpen}
         onClose={handleCloseLogin}
-        onLoginClick={handleGoToLogin2}      // abre ModalLogin2
-        onRegisterClick={handleGoToCadastro} // abre ModalCadastro
+        onLoginClick={handleGoToLogin2}
+        onRegisterClick={handleGoToCadastro}
+        onAdminLoginClick={handleOpenLogin2}
       />
 
       {/* ModalLogin2 (form de login) */}
