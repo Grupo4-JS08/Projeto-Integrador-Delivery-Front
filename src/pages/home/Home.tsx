@@ -1,11 +1,12 @@
-import { FaSearch, FaShoppingCart } from "react-icons/fa";
 
-import { Link } from "react-router-dom";
+
+import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import FooterInfo from "../../componets/footerinfo/FooterInfo";
 
 
 function Home() {
     return (
+        <>
         <div className="w-full">
             {/* BANNER */}
             <section className="container mx-auto mt-6">
@@ -15,8 +16,7 @@ function Home() {
                     <img
                         src="/comida.jpg"
                         alt="Fundo"
-                        className="absolute inset-0 w-full h-full object-cover opacity-20 rounded-lg"
-                    />
+                        className="absolute inset-0 w-full h-full object-cover opacity-20 rounded-lg" />
                     {/* Texto */}
                     <div className="relative z-10 mb-4 md:mb-0">
                         <h2 className="text-3xl font-bold mb-4 text-orange-500">Mais pedido</h2>
@@ -36,13 +36,11 @@ function Home() {
                         <img
                             src="/comida.jpg"
                             alt="Prato"
-                            className="w-125 h-50 object-cover rounded-lg"
-                        />
+                            className="w-125 h-50 object-cover rounded-lg" />
                         <img
                             src="/avalicao.png"
                             alt="Avaliação"
-                            className="absolute bottom-2 left-2 w-17 h-auto rounded shadow"
-                        />
+                            className="absolute bottom-2 left-2 w-17 h-auto rounded shadow" />
                     </div>
                 </div>
             </section>
@@ -56,8 +54,7 @@ function Home() {
                         <input
                             type="text"
                             placeholder="Pesquisar"
-                            className="pl-10 pr-4 py-2 border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF9800]"
-                        />
+                            className="pl-10 pr-4 py-2 border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF9800]" />
                         <FaSearch className="absolute left-3 top-3 text-gray-400" />
                     </div>
                 </div>
@@ -87,8 +84,7 @@ function Home() {
                     <img
                         src="/saudavel02.jpg"
                         alt="Mais promoções"
-                        className="w-full h-56 object-cover"
-                    />
+                        className="w-full h-56 object-cover" />
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4 text-white">
                         <span className="text-sm">Aproveite nossas promoções parceiras</span>
                         <h3 className="font-bold text-lg">Mais promoções</h3>
@@ -101,8 +97,7 @@ function Home() {
                     <img
                         src="/lanche01.jpg"
                         alt="Comidas veganas"
-                        className="w-full h-56 object-cover"
-                    />
+                        className="w-full h-56 object-cover" />
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4 text-white">
                         <span className="text-sm">Aqui você encontra</span>
                         <h3 className="font-bold text-lg">Comidas veganas</h3>
@@ -115,8 +110,7 @@ function Home() {
                     <img
                         src="/promo3.jpg"
                         alt="Linha Detox"
-                        className="w-full h-56 object-cover"
-                    />
+                        className="w-full h-56 object-cover" />
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4 text-white">
                         <span className="text-sm">Sempre o melhor para você</span>
                         <h3 className="font-bold text-lg">Conheça nossa linha Detox</h3>
@@ -141,8 +135,7 @@ function Home() {
                             <img
                                 src="/lanche01.jpg"
                                 alt="Produto"
-                                className="w-30 h-35 object-cover rounded"
-                            />
+                                className="w-30 h-35 object-cover rounded" />
                         </div>
                     </div>
 
@@ -157,8 +150,7 @@ function Home() {
                             <img
                                 src="/lanche02.jpg"
                                 alt="Produto"
-                                className="w-30 h-35 object-cover rounded"
-                            />
+                                className="w-30 h-35 object-cover rounded" />
                         </div>
                     </div>
 
@@ -174,13 +166,12 @@ function Home() {
                                 <img
                                     src="/lanche03.jpg"
                                     alt="Produto"
-                                    className="w-30 h-35 object-cover rounded"
-                                />
+                                    className="w-30 h-35 object-cover rounded" />
                                 <FaShoppingCart className="absolute bottom-2 right-2 text-[#FF9800] text-xl" />
                             </div>
                         </div>
                     </div>
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <div className="flex justify-between p-4">
                             <div>
                                 <h3 className="font-bold text-lg">Produto</h3>
@@ -190,11 +181,10 @@ function Home() {
                             <img
                                 src="/lanche02.jpg"
                                 alt="Produto"
-                                className="w-30 h-35 object-cover rounded"
-                            />
+                                className="w-30 h-35 object-cover rounded" />
                         </div>
                     </div>
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <div className="flex justify-between p-4">
                             <div>
                                 <h3 className="font-bold text-lg">Produto</h3>
@@ -204,11 +194,10 @@ function Home() {
                             <img
                                 src="/lanche02.jpg"
                                 alt="Produto"
-                                className="w-30 h-35 object-cover rounded"
-                            />
+                                className="w-30 h-35 object-cover rounded" />
                         </div>
                     </div>
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <div className="flex justify-between p-4">
                             <div>
                                 <h3 className="font-bold text-lg">Produto</h3>
@@ -218,11 +207,10 @@ function Home() {
                             <img
                                 src="/lanche02.jpg"
                                 alt="Produto"
-                                className="w-30 h-35 object-cover rounded"
-                            />
+                                className="w-30 h-35 object-cover rounded" />
                         </div>
                     </div>
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <div className="flex justify-between p-4">
                             <div>
                                 <h3 className="font-bold text-lg">Produto</h3>
@@ -232,11 +220,10 @@ function Home() {
                             <img
                                 src="/lanche02.jpg"
                                 alt="Produto"
-                                className="w-30 h-35 object-cover rounded"
-                            />
+                                className="w-30 h-35 object-cover rounded" />
                         </div>
                     </div>
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <div className="flex justify-between p-4">
                             <div>
                                 <h3 className="font-bold text-lg">Produto</h3>
@@ -246,8 +233,7 @@ function Home() {
                             <img
                                 src="/lanche02.jpg"
                                 alt="Produto"
-                                className="w-30 h-35 object-cover rounded"
-                            />
+                                className="w-30 h-35 object-cover rounded" />
                         </div>
                     </div>
                 </div>
@@ -263,8 +249,7 @@ function Home() {
                         <img
                             src="/saudavel02.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-50 object-cover"
-                        />
+                            className="w-full h-50 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da Comida</h3>
                             <p className="text-sm text-gray-600">
@@ -279,8 +264,7 @@ function Home() {
                         <img
                             src="/saudavel01.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-50 object-cover"
-                        />
+                            className="w-full h-50 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da comida</h3>
                             <p className="text-sm text-gray-600">
@@ -293,8 +277,7 @@ function Home() {
                         <img
                             src="/saudavel01.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-50 object-cover"
-                        />
+                            className="w-full h-50 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da comida</h3>
                             <p className="text-sm text-gray-600">
@@ -303,12 +286,11 @@ function Home() {
                             <span className="font-bold text-gray-900 mt-2 block">Não sei</span>
                         </div>
                     </div>
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <img
                             src="/saudavel01.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-50 object-cover"
-                        />
+                            className="w-full h-50 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da comida</h3>
                             <p className="text-sm text-gray-600">
@@ -320,7 +302,7 @@ function Home() {
                 </div>
             </section>
 
-                {/* SEÇÃO BEBIDAS */}
+            {/* SEÇÃO BEBIDAS */}
             <section className="container mx-auto mt-12">
                 <h2 className="text-2xl font-bold text-orange-500 mb-6">Bebidas</h2>
 
@@ -330,8 +312,7 @@ function Home() {
                         <img
                             src="/coca.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-70 object-cover"
-                        />
+                            className="w-full h-70 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da Comida</h3>
                             <p className="text-sm text-gray-600">
@@ -346,8 +327,7 @@ function Home() {
                         <img
                             src="/manga.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-70 object-cover"
-                        />
+                            className="w-full h-70 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da comida</h3>
                             <p className="text-sm text-gray-600">
@@ -357,13 +337,12 @@ function Home() {
                         </div>
                     </div>
 
-                     {/* Bebida 03*/}
+                    {/* Bebida 03*/}
                     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <img
                             src="/milk.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-70 object-cover"
-                        />
+                            className="w-full h-70 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da comida</h3>
                             <p className="text-sm text-gray-600">
@@ -373,13 +352,12 @@ function Home() {
                         </div>
                     </div>
 
-                     {/* Bebida 04 */}
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
+                    {/* Bebida 04 */}
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
                         <img
                             src="/laranja.jpg"
                             alt="Produto Saudável"
-                            className="w-full h-70 object-cover"
-                        />
+                            className="w-full h-70 object-cover" />
                         <div className="p-4">
                             <h3 className="font-bold text-lg">Nome da comida</h3>
                             <p className="text-sm text-gray-600">
@@ -390,14 +368,9 @@ function Home() {
                     </div>
                 </div>
             </section>
-            <h1>fim</h1>
-        </div>
+        </div><FooterInfo /></>
 
     );
-
-      </section>
-      <FooterInfo />
-    </div>
-
+}
 
 export default Home;
