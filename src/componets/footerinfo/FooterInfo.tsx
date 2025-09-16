@@ -19,18 +19,11 @@ function FooterInfo() {
         {/* Card por cima do mapa */}
         <div className="absolute top-25 left-6 bg-[#7E8C54] text-white p-10 rounded-lg shadow-lg w-70">
           <h3 className="font-bold text-lg">DevLivery</h3>
-          <p className="font-semibold">NN entendi</p>
           <p className="mt-2 text-sm">
-            AV.Brigadeiro Faria Lima - SP
+            AV. Brigadeiro Faria Lima, 10 - São Paulo - SP
           </p>
           <p className="mt-7 text-sm">
             <span className="font-bold">Número de Telefone: </span>(11) 91234-5678
-          </p>
-          <p className="mt-2 text-sm">
-            <span className="font-bold">Website: </span>
-            <a href="" target="_blank" rel="noreferrer" className="underline">
-              Nosso site aqui
-            </a>
           </p>
         </div>
       </div>
