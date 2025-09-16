@@ -25,7 +25,6 @@ function App() {
             <Route path="/contato" element={<Contato />} />
           </Routes>
         </div>
-
         <Footer />
       </div>
     </AuthProvider>
