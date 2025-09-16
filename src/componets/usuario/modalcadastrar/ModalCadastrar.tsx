@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
@@ -19,21 +18,14 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
   const [confirmarSenha, setConfirmarSenha] = useState("");
 
   const [usuario, setUsuario] = useState<Usuario>({
-    id: 0,
     nome: "",
-    email: "",
+    usuario: "",
     senha: "",
     objetivo: "geral", // Valor padrão
     endereco: "",
     token: "",
+    foto: "teste.jpg",
   });
-
-  useEffect(() => {
-    if (usuario.id !== 0) {
-      onClose();
-    }
-  }, [usuario]);
-
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     setUsuario({
       ...usuario,
@@ -104,14 +96,14 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
           </div>
 
           <div>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="usuario">Email</label>
             <input
               type="email"
-              id="email"
-              name="email"
+              id="usuario"
+              name="usuario"
               placeholder="Email"
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
-              value={usuario.email}
+              value={usuario.usuario}
               onChange={atualizarEstado}
               required
             />
