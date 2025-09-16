@@ -6,6 +6,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './componets/navbar/NavBar';
 import Footer from './componets/footer/Footer';
 import Home2 from './pages/home/Home2';
+import { CarrinhoProvider } from './contexts/CarrinhoContext';
+import Carrinho from './pages/carrinho/Carrinho';
 
 function App() {
   const location = useLocation(); 
@@ -16,6 +18,7 @@ function App() {
         {location.pathname !== '/home2' && <Navbar />}
 
         <div className="min-h-[80vh]">
+          <CarrinhoProvider>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
@@ -23,7 +26,9 @@ function App() {
             <Route path="/produtos" element={<Produtos />} />
             <Route path="/ofertas" element={<Home />} />
             <Route path="/contato" element={<Contato />} />
+            <Route path="/carrinho" element={<Carrinho />} />
           </Routes>
+          </CarrinhoProvider>
         </div>
 
         <Footer />
