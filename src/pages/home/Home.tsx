@@ -1,5 +1,8 @@
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 
+import { Link } from "react-router-dom";
+import FooterInfo from "../../componets/footerinfo/FooterInfo";
+
 
 function Home() {
     return (
@@ -389,7 +392,12 @@ function Home() {
             </section>
             <h1>fim</h1>
         </div>
+
     );
-}
+
+      </section>
+      <FooterInfo />
+    </div>
+
 
 export default Home;
