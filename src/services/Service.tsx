@@ -6,7 +6,7 @@ import axios from "axios";
 
 // Configuração base da API
 const api = axios.create({
-  baseURL: "http://localhost:4000", // URL do back-end NestJS
+  baseURL: "https://projeto-integrador-delivery.onrender.com", // URL do back-end NestJS
   headers: {
     "Content-Type": "application/json",
   },
@@ -15,8 +15,9 @@ const api = axios.create({
 // Interceptor para adicionar o token de autenticação às requisições
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
     if (token) {
+      token = token.replace("Bearer ", "");
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

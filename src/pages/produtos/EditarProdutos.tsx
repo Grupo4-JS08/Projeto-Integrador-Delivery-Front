@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { buscar } from '../../services/Service';
 import { FaShoppingCart } from 'react-icons/fa';
-import type Produto from '../../models/Produtos';
+import type Produto from '../../models/Produto';
 
 function EditarProdutos() {
   const [produtos, setProdutos] = useState<Produto[]>([]);

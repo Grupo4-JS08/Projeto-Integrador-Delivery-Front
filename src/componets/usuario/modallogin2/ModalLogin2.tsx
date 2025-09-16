@@ -65,6 +65,25 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
     [onClose]
   );
 
+
+  // Reage às mudanças de token/isLoading após uma tentativa de login
+  useEffect(() => {
+    if (!hasSubmitted) return;
+
+    // Quando terminar de carregar, checamos o token
+    if (!isLoading) {
+      if (usuario.token && usuario.token.trim() !== "") {
+        // sucesso: fecha modal
+        localStorage.setItem("token", usuario.token);
+        onClose();
+      } else {
+        // falhou: mostra erro local
+        setLoginError("Usuário ou senha incorretos.");
+      }
+    }
+  }, [usuario?.token, isLoading, hasSubmitted, onClose]);
+
+
   return (
     <div
       className="fixed inset-0 z-[140] flex items-center bg-black/50 justify-center bg-opacity-60"
