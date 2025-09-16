@@ -71,6 +71,7 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
     if (!isLoading) {
       if (usuario.token && usuario.token.trim() !== "") {
         // sucesso: fecha modal
+        localStorage.setItem("token", usuario.token);
         onClose();
       } else {
         // falhou: mostra erro local
