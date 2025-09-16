@@ -1,5 +1,4 @@
-export default interface Usuario {
-    email: string;
+export default interface UsuarioLogin {
+    usuario: string;
     senha: string;
-    // token: string;
 }

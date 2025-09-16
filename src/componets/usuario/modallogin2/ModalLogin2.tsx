@@ -1,180 +1,140 @@
-import {
-  useContext,
-  useEffect,
-  useState,
-  type ChangeEvent,
-  type FormEvent,
-  useCallback,
-} from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { PulseLoader } from "react-spinners";
-import { IoMdClose } from "react-icons/io";
-import { AiOutlineMail } from "react-icons/ai";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+// src/components/modal/ModalLogin.tsx
+import React, { useEffect, useRef } from "react";
+import { FaUser, FaUserPlus, FaUserShield } from "react-icons/fa";
 
-interface ModalLogin2Props {
+export type ModalLoginProps = {
+  /** controla se o modal aparece */
+  isOpen: boolean;
+  /** fecha o modal */
   onClose: () => void;
-}
+  /** abre o ModalLogin2 (etapa de login) */
+  onLoginClick: () => void;
+  /** abre o ModalCadastro (etapa de cadastro) */
+  onRegisterClick: () => void;
+  /** abre o ModalLogin2 em modo admin */
+  onAdminLoginClick: () => void;
+};
 
-function ModalLogin2({ onClose }: ModalLogin2Props) {
-  const { usuario, handleLogin, isLoading } = useContext(AuthContext);
-
-  const [usuarioLogin, setUsuarioLogin] = useState({
-    email: "",
-    senha: "",
-  });
-
-  // controla a lógica de fechar apenas após tentativa de login
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  // erro local exibido no modal
-  const [loginError, setLoginError] = useState<string | null>(null);
-  // toggle senha
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-
-  // Atualiza estado dos inputs
-  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
-    setUsuarioLogin((prev) => ({ ...prev, [name]: value }));
-  }
-
-  // Submit do login
-  async function login(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setHasSubmitted(true);
-    setLoginError(null); // limpa erro anterior
-    await handleLogin(usuarioLogin);
-    // Não fechamos aqui — esperamos os efeitos do contexto (token/isLoading)
-  }
+const ModalLogin: React.FC<ModalLoginProps> = ({
+  isOpen,
+  onClose,
+  onLoginClick,
+  onRegisterClick,
+  onAdminLoginClick,
+}) => {
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   // Fecha com tecla ESC
   useEffect(() => {
-    const onKey = (ev: KeyboardEvent) => {
-      if (ev.key === "Escape") onClose();
+    if (!isOpen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
 
-  // Fecha ao clicar no backdrop
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) onClose();
-    },
-    [onClose]
-  );
+  // Fecha clicando fora do card (backdrop)
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) onClose();
+  };
 
-  // Reage às mudanças de token/isLoading após uma tentativa de login
-  useEffect(() => {
-    if (!hasSubmitted) return;
-
-    // Quando terminar de carregar, checamos o token
-    if (!isLoading) {
-      if (usuario.token && usuario.token.trim() !== "") {
-        // sucesso: fecha modal
-        onClose();
-      } else {
-        // falhou: mostra erro local
-        setLoginError("Usuário ou senha incorretos.");
-      }
-    }
-  }, [usuario?.token, isLoading, hasSubmitted, onClose]);
+  if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[140] flex items-center bg-black/50 justify-center bg-opacity-60"
+      className="fixed inset-0 z-[120] bg-black/50 flex items-center justify-center px-4"
       onMouseDown={handleBackdropClick}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-login2-title"
+      aria-labelledby="modal-login-title"
     >
-      <div className="bg-white rounded-xl p-8 w-full max-w-md relative text-center shadow-lg">
-        {/* Botão fechar */}
+      <div
+        ref={dialogRef}
+        className="relative bg-white rounded-xl p-6 max-w-md w-full shadow-lg"
+      >
+        {/* Fechar */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white bg-black rounded-full w-8 h-8 flex items-center justify-center text-lg"
-          aria-label="Fechar"
+          className="absolute top-4 right-4 text-white bg-[#0F172A] rounded-full w-8 h-8 flex items-center justify-center text-lg"
+          aria-label="Fechar modal"
         >
-          <IoMdClose />
+          &times;
         </button>
 
         {/* Logo */}
-        <div className="mb-2">
+        <div className="flex justify-center mb-6">
           <img
             src="/LogoDevLivery.png"
-            alt="Logo DevLivery"
-            className="mx-auto w-40"
+            alt="DevLivery Logo"
+            className="w-40"
           />
         </div>
 
-        <h2 id="modal-login2-title" className="text-[#f79009] font-bold text-lg mb-4">
-          Bem-vindo de volta
+        {/* Título (para acessibilidade, ligado ao aria-labelledby) */}
+        <h2 id="modal-login-title" className="sr-only">
+          Entrar ou cadastrar
         </h2>
 
-        <form onSubmit={login} className="space-y-4 text-left">
-          {/* Email */}
-          <div className="relative">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={usuarioLogin.email}
-              onChange={atualizarEstado}
-              className="w-full px-4 py-2 pr-10 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
-              required
-            />
-            <AiOutlineMail
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 pointer-events-none"
-              aria-hidden
-            />
-          </div>
+        {/* Botão Login -> abre ModalLogin2 */}
+        <button
+          type="button"
+          onClick={onLoginClick}
+          className="flex items-center justify-center w-full bg-[#758250] hover:bg-[#606f3d] text-white font-semibold py-3 rounded-full text-lg transition mb-4"
+        >
+          <FaUser className="mr-2" />
+          Login
+        </button>
 
-          {/* Senha */}
-          <div className="relative">
-            <input
-              type={mostrarSenha ? "text" : "password"}
-              name="senha"
-              placeholder="Senha"
-              value={usuarioLogin.senha}
-              onChange={atualizarEstado}
-              className="w-full px-4 py-2 pr-10 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
-              required
-              minLength={6}
-            />
+             {/* Botão Login Admin */}
+        <button
+          type="button"
+          onClick={onAdminLoginClick}
+          className="flex items-center justify-center w-full bg-[#FF9800] hover:bg-[#e68900] text-white font-semibold py-3 rounded-full text-lg transition mb-4"
+        >
+          <FaUserShield className="mr-2" />
+          Login Administrador
+        </button>
+
+        {/* Botão Cadastrar -> abre ModalCadastro */}
+        <button
+          type="button"
+          onClick={onRegisterClick}
+          className="flex items-center justify-center w-full bg-[#FDF2C3] hover:bg-[#fbe9a1] text-[#1E1E1E] font-semibold py-3 rounded-full text-lg transition mb-4"
+        >
+          <FaUserPlus className="mr-2" />
+          Cadastrar
+        </button>
+
+        {/* Links auxiliares */}
+        <div className="text-center space-y-2">
+          <button
+            type="button"
+            className="text-sm text-[#1E1E1E] underline hover:text-orange-600"
+            onClick={() => {
+              // aqui você pode acionar um fluxo de recuperação de senha
+              // ex.: navegar para "/recuperar-senha" ou abrir outro modal
+              // navigate("/recuperar-senha");
+            }}
+          >
+            Esqueci a senha
+          </button>
+
+          {/* exemplo de link secundário para cadastro (opcional) */}
+          {/* <div>
+            <span className="text-sm text-[#1E1E1E]">Não tem conta? </span>
             <button
               type="button"
-              onClick={() => setMostrarSenha((v) => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700"
-              aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
-              aria-pressed={mostrarSenha}
+              onClick={onRegisterClick}
+              className="text-sm underline text-[#1E1E1E] hover:text-orange-600"
             >
-              {mostrarSenha ? <FaEyeSlash /> : <FaEye />}
+              Cadastre-se
             </button>
-          </div>
-
-          {/* Erro local de login */}
-          {loginError && (
-            <p className="text-sm text-[#EAAA00] font-medium">
-              {loginError}
-            </p>
-          )}
-
-          {/* Botão Logar */}
-          <button
-            type="submit"
-            className="w-full bg-[#f79009] hover:bg-[#e28200] text-white font-bold py-2 rounded-full transition disabled:opacity-70"
-            disabled={isLoading}
-          >
-            {isLoading ? <PulseLoader color="#fff" size={10} /> : "Logar"}
-          </button>
-        </form>
-
-        <p className="text-sm mt-4 underline text-[#1e293b] cursor-pointer hover:text-[#f79009]">
-          Esqueci a senha
-        </p>
+          </div> */}
+        </div>
       </div>
     </div>
   );
-}
+};
 
-
-export default ModalLogin2;
+export default ModalLogin;

@@ -1,16 +1,15 @@
-import { createContext, useState, type ReactNode } from "react";
-import type Usuario from "../models/Usuario";
+/* eslint-disable react-refresh/only-export-components */
+// AuthContext.tsx (atualizado para garantir que isMasterAdmin seja tratado corretamente)
+import { createContext, useState, useEffect, type ReactNode } from "react";
 import { login } from "../services/Service";
+import type Usuario from "../models/Usuario";
 import type UsuarioLogin from "../models/UsuarioLogin";
-
-// import { ToastAlerta } from "../utils/ToastAlerta";
 
 interface AuthContextProps {
   usuario: Usuario;
   handleLogout(): void;
   handleLogin(usuarioLogin: UsuarioLogin): Promise<void>;
   isLoading: boolean;
-  erro: boolean;//apagar?
 }
 
 interface AuthProviderProps {
@@ -20,14 +19,27 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [usuario, setUsuario] = useState<Usuario>({
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    objetivo: "geral",
-    endereco: "",
-    token: "",
+  const [usuario, setUsuario] = useState<Usuario>(() => {
+    // Recupera dados do usuário do localStorage se disponível
+    const usuarioSalvo = localStorage.getItem("usuario");
+    if (usuarioSalvo) {
+      const parsedUsuario = JSON.parse(usuarioSalvo);
+      return {
+        ...parsedUsuario,
+        // Garante que isMasterAdmin seja um booleano
+        isMasterAdmin: Boolean(parsedUsuario.isMasterAdmin),
+      };
+    }
+    return {
+      id: 0,
+      nome: "",
+      email: "",
+      senha: "",
+      objetivo: "geral",
+      endereco: "",
+      token: "",
+      isMasterAdmin: false,
+    };
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -35,10 +47,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function handleLogin(usuarioLogin: UsuarioLogin) {
     setIsLoading(true);
     try {
-      await login("/usuarios/login2", usuarioLogin, setUsuario);
-      //ToastAlerta("Usuário foi autenticado com sucesso!", "sucesso")
+      // Mude para o endpoint CORRETO: "/usuarios/logar"
+      await login("/usuarios/logar", usuarioLogin, (userData: Usuario) => {
+        const usuarioCompleto = {
+          ...userData,
+          isMasterAdmin: Boolean(userData.isMasterAdmin),
+        };
+        setUsuario(usuarioCompleto);
+      });
     } catch (error) {
-      //ToastAlerta("Os dados do Usuário estão inconsistentes!", "erro")
+      console.error("Erro ao fazer login:", error);
+      throw error;
     }
     setIsLoading(false);
   }
@@ -49,15 +68,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
       nome: "",
       email: "",
       senha: "",
-      objetivo: "",
+      objetivo: "geral",
       endereco: "",
       token: "",
+      isMasterAdmin: false,
     });
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
   }
+
+  // Salva dados do usuário no localStorage quando mudam
+  useEffect(() => {
+    if (usuario.token) {
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+      localStorage.setItem("token", usuario.token);
+    }
+  }, [usuario]);
 
   return (
     <AuthContext.Provider
-      value={{ usuario, handleLogin, handleLogout, isLoading, erro: false }}//erro?
+      value={{ usuario, handleLogin, handleLogout, isLoading }}
     >
       {children}
     </AuthContext.Provider>

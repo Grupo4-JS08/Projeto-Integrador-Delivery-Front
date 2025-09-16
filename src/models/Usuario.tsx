@@ -6,4 +6,7 @@ export default interface Usuario {
     objetivo: 'emagrecer' | 'hipertrofia' | 'geral';
     endereco: string;
     token: string;
+    foto?: string;
+    usuario?: string; // Campo do back
+     isMasterAdmin?: boolean;
 }

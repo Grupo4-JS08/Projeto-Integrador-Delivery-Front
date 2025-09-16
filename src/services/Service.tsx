@@ -1,34 +1,105 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-wrapper-object-types */
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import axios from "axios";
 
+// Configuração base da API
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
-})
+  baseURL: "http://localhost:4000", // URL do back-end NestJS
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export const cadastrarUsuario = async (url: string, dados: Object, setDados: Function) =>{
-    const resposta = await api.post(url, dados)
-    setDados(resposta.data)
+// Interceptor para adicionar o token de autenticação às requisições
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export const cadastrarUsuario = async (
+  url: string,
+  dados: Object,
+  setDados: Function
+) => {
+  const resposta = await api.post(url, dados);
+  setDados(resposta.data);
+};
+
+// Login do usuário (ou admin)
+export const login = async (url: string, dados: Object, setDados: Function) => {
+  const resposta = await api.post(url, dados);
+  setDados(resposta.data);
+
+  // Salva o token no localStorage
+  if (resposta.data.token) {
+    localStorage.setItem("token", resposta.data.token);
+    localStorage.setItem("usuario", JSON.stringify(resposta.data));
+
+    // Decodifica o token para verificar se é admin
+    try {
+      const decoded: any = jwtDecode(resposta.data.token);
+      if (decoded.isMasterAdmin) {
+        localStorage.setItem("isAdmin", "true");
+      } else {
+        localStorage.setItem("isAdmin", "false");
+      }
+    } catch (err) {
+      console.error("Erro ao decodificar token JWT:", err);
+      localStorage.setItem("isAdmin", "false");
+    }
+  }
+};
+
+// Função para verificar se está logado e se é admin
+export const isAdmin = (): boolean => {
+  return localStorage.getItem("isAdmin") === "true";
+};
+
+export const buscar = async (
+  url: string,
+  setDados: Function,
+  header: Object = {}
+) => {
+  const resposta = await api.get(url, header);
+  setDados(resposta.data);
+};
+
+export const cadastrar = async (
+  url: string,
+  dados: Object,
+  setDados: Function,
+  header: Object = {}
+) => {
+  const resposta = await api.post(url, dados, header);
+  setDados(resposta.data);
+};
+
+export const atualizar = async (
+  url: string,
+  dados: Object,
+  setDados: Function,
+  header: Object = {}
+) => {
+  const resposta = await api.put(url, dados, header);
+  setDados(resposta.data);
+};
+
+export const deletar = async (url: string, header: Object = {}) => {
+  await api.delete(url, header);
+};
+
+export default api;
+function jwtDecode(token: any): any {
+  throw new Error("Function not implemented.");
 }
 
-export const login = async (url: string, dados: Object, setDados: Function) =>{
-    const resposta = await api.post(url, dados)
-    setDados(resposta.data)
-}
-
-export const buscar = async (url: string, setDados: Function, header: Object) => {
-    const resposta = await api.get(url, header)
-    setDados(resposta.data)
-}
-
-export const cadastrar = async (url: string, dados: Object, setDados: Function, header: Object) => {
-    const resposta = await api.post(url, dados, header)
-    setDados(resposta.data)
-}
-
-export const atualizar = async (url: string, dados: Object, setDados: Function, header: Object) => {
-    const resposta = await api.put(url, dados, header)
-    setDados(resposta.data)
-}
-
-export const deletar = async (url: string, header: Object) => {
-    await api.delete(url, header)
-}

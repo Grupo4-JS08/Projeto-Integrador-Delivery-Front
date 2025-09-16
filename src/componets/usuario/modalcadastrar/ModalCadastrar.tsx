@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useEffect,
   useState,
@@ -6,7 +7,6 @@ import {
 } from "react";
 import { IoMdClose } from "react-icons/io";
 import { PulseLoader } from "react-spinners";
-// import { ToastAlerta } from "../../utils/ToastAlerta";
 import { cadastrarUsuario } from "../../../services/Service";
 import type Usuario from "../../../models/Usuario";
 
@@ -23,14 +23,14 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
     nome: "",
     email: "",
     senha: "",
-    objetivo: "geral",
+    objetivo: "geral", // Valor padrão
     endereco: "",
     token: "",
   });
 
   useEffect(() => {
     if (usuario.id !== 0) {
-      onClose(); // Fecha o modal após cadastro
+      onClose();
     }
   }, [usuario]);
 
@@ -45,6 +45,15 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
     setConfirmarSenha(e.target.value);
   }
 
+  function handleChange(e: ChangeEvent<HTMLSelectElement>) {
+    // Garante que o valor seja um dos tipos permitidos
+    const value = e.target.value as "emagrecer" | "hipertrofia" | "geral";
+    setUsuario({
+      ...usuario,
+      objetivo: value,
+    });
+  }
+
   async function cadastrarNovoUsuario(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -52,33 +61,20 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
       setIsLoading(true);
       try {
         await cadastrarUsuario("/usuarios/cadastrar", usuario, setUsuario);
-        // ToastAlerta("Usuário cadastrado com sucesso!", "sucesso");
       } catch (error) {
-        // ToastAlerta("Erro ao cadastrar o usuário", "erro");
+        console.error("Erro ao cadastrar:", error);
       }
       setIsLoading(false);
     } else {
-      //   ToastAlerta(
-      //     "Dados do usuário inconsistentes! Verifique as informações.",
-      //     "erro"
-      //   );
       setUsuario({ ...usuario, senha: "" });
       setConfirmarSenha("");
     }
-  }
-
-  function handleChange(e: ChangeEvent<HTMLSelectElement>) {
-    setUsuario({
-      ...usuario,
-      objetivo: e.target.value, // atualiza objetivo corretamente
-    });
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-60">
       <div className="bg-white rounded-xl p-8 w-full max-w-lg relative text-center shadow-xl overflow-y-auto max-h-[95vh]">
 
-        {/* Botão Fechar */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-white bg-black rounded-full w-8 h-8 flex items-center justify-center text-lg"
@@ -86,7 +82,6 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
           <IoMdClose />
         </button>
 
-        {/* Logo */}
         <div className="mb-2">
           <img src="/LogoDevLivery.png" alt="Logo" className="mx-auto w-40" />
         </div>
@@ -104,6 +99,7 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
               value={usuario.nome}
               onChange={atualizarEstado}
+              required
             />
           </div>
 
@@ -117,6 +113,7 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
               value={usuario.email}
               onChange={atualizarEstado}
+              required
             />
           </div>
 
@@ -130,13 +127,11 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
               value={usuario.senha}
               onChange={atualizarEstado}
+              required
+              minLength={8}
             />
             <p className="text-xs text-gray-500 mt-1 ml-2">
-              A senha deve conter:
-              <ul className="list-disc ml-6">
-                <li>No mínimo 8 dígitos</li>
-                <li>Letra maiúscula, número e caractere especial</li>
-              </ul>
+              A senha deve conter no mínimo 8 dígitos
             </p>
           </div>
 
@@ -150,6 +145,7 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
               value={confirmarSenha}
               onChange={handleConfirmarSenha}
+              required
             />
           </div>
 
@@ -163,6 +159,7 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
               value={usuario.endereco}
               onChange={atualizarEstado}
+              required
             />
           </div>
 
@@ -195,11 +192,11 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
             <select
               id="objetivo"
               name="objetivo"
-              value={usuario.objetivo} // <- controlado pelo estado
+              value={usuario.objetivo}
               onChange={handleChange}
               className="w-full bg-[#fdf1d4] rounded-full px-4 py-2 mt-1"
+              required
             >
-              <option value="">Selecione uma opção</option>
               <option value="emagrecer">Emagrecer</option>
               <option value="hipertrofia">Hipertrofia</option>
               <option value="geral">Geral</option>
@@ -209,6 +206,7 @@ export default function ModalCadastro({ onClose }: ModalCadastroProps) {
           <button
             type="submit"
             className="w-full bg-[#f79009] hover:bg-[#e28200] text-white font-bold py-2 rounded-full transition mt-4"
+            disabled={isLoading}
           >
             {isLoading ? <PulseLoader color="#fff" size={10} /> : "Cadastrar"}
           </button>
