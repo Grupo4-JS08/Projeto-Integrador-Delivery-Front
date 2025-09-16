@@ -1,4 +1,7 @@
+
 /* eslint-disable */
+
+
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import FooterInfo from "../../componets/footerinfo/FooterInfo";
 import { useEffect, useState } from "react";
