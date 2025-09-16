@@ -4,8 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './componets/navbar/NavBar';
 import Home from './pages/home/Home';
 import Produtos from './pages/produtos/Produtos';
-import Categorias from './pages/categorias/Categorias';
-import FooterInfo from './componets/footerinfo/FooterInfo';
+// import Categorias from './pages/categorias/Categorias';
 import Footer from './componets/footer/Footer';
 import Contato from './pages/contato/Contato';
 function App() {
@@ -18,12 +17,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/produtos" element={<Produtos />} />
-            <Route path="/categorias" element={<Categorias />} />
+            {/* <Route path="/categorias" element={<Categorias />} /> */}
             <Route path="/ofertas" element={<Home />} />
             <Route path="/contato" element={<Contato />} />
           </Routes>
         </div>
-        <FooterInfo />
         <Footer />
       </div>
     </AuthProvider>
