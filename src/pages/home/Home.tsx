@@ -186,12 +186,16 @@ function NavBar2({
               <div className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow">
                 Olá {usuario.nome}
               </div>
+
               <button
                 onClick={handleLogout}
                 className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90 cursor-pointer"
               >
                 Sair
               </button>
+=======
+
+
             </>
           ) : (
             <button
