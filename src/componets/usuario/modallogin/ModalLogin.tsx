@@ -34,7 +34,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
     return () => window.removeEventListener("keydown", handleKey);
   }, [isOpen, onClose]);
 
-  // Fecha clicando fora do card (backdrop)
+  // Fecha clicando fora do card 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
   };
@@ -67,11 +67,11 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
           <img
             src="/LogoDevLivery.png"
             alt="DevLivery Logo"
-            className="w-40"
+            className="w-60"
           />
         </div>
 
-        {/* Título (para acessibilidade, ligado ao aria-labelledby) */}
+        {/* Título */}
         <h2 id="modal-login-title" className="sr-only">
           Entrar ou cadastrar
         </h2>
@@ -120,17 +120,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
             Esqueci a senha
           </button>
 
-          {/* exemplo de link secundário para cadastro (opcional) */}
-          {/* <div>
-            <span className="text-sm text-[#1E1E1E]">Não tem conta? </span>
-            <button
-              type="button"
-              onClick={onRegisterClick}
-              className="text-sm underline text-[#1E1E1E] hover:text-orange-600"
-            >
-              Cadastre-se
-            </button>
-          </div> */}
+
         </div>
       </div>
     </div>

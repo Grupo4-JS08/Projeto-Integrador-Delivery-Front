@@ -76,7 +76,7 @@ function Navbar() {
         <div className="container mx-auto flex justify-between items-center py-2 px-6">
           {/* LOGO */}
           <Link to="/home" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Logo DevLivery" className="h-16 w-auto" />
+            <img src="/logo.png" alt="Logo DevLivery" className="h-auto max-w-60" />
           </Link>
 
           {/* MENU */}
@@ -85,13 +85,13 @@ function Navbar() {
             <div className="flex rounded-full overflow-hidden border border-gray-200">
               <Link
                 to="/ofertas"
-                className="px-4 py-2 bg-[#7E8C54] text-white font-semibold text-sm hover:opacity-90 transition rounded-l-full text-center"
+                className="px-4 py-2 bg-[#7E8C54] text-white font-semibold text-sm hover:opacity-70 transition rounded-l-full text-center"
               >
                 Ofertas
               </Link>
               <Link
                 to="/contato"
-                className="px-4 py-2 bg-[#FFF5DC] text-black font-semibold text-sm hover:opacity-90 transition rounded-r-full"
+                className="px-4 py-2 bg-[#FFF5DC] text-black font-semibold text-sm hover:opacity-70 transition rounded-r-full"
               >
                 Contato
               </Link>
@@ -114,7 +114,7 @@ function Navbar() {
               <button
                 type="button"
                 onClick={handleOpenLogin}
-                className="flex items-center space-x-2 px-5 py-2 rounded-full bg-[#FF9800] text-black font-semibold text-sm hover:opacity-90 transition"
+                className="cursor-pointer flex items-center space-x-2 px-5 py-2 rounded-full bg-[#FF9800] text-black font-semibold text-sm hover:opacity-70 transition"
               >
                 <FaUser />
                 <span>Login</span>

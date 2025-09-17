@@ -51,8 +51,10 @@ export const login = async (url: string, dados: Object, setDados: Function) => {
       const decoded: any = jwtDecode(resposta.data.token);
       if (decoded.isMasterAdmin) {
         localStorage.setItem("isAdmin", "true");
+        return resposta.data;
       } else {
         localStorage.setItem("isAdmin", "false");
+        return resposta.data;
       }
     } catch (err) {
       console.error("Erro ao decodificar token JWT:", err);
