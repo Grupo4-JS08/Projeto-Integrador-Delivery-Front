@@ -131,7 +131,6 @@ function Navbar() {
           </div>
         </div>
       </nav>
-
       {/* ModalLogin (passo 1) */}
       <ModalLogin
         isOpen={isLoginOpen}
@@ -140,12 +139,15 @@ function Navbar() {
         onRegisterClick={handleGoToCadastro}
         onAdminLoginClick={handleOpenLogin2}
       />
-
       {/* ModalLogin2 (form de login) */}
       {isLogin2Open && <ModalLogin2 onClose={handleCloseLogin2} />}
-
       {/* ModalCadastro */}
-      {isCadastroOpen && <ModalCadastro onClose={handleCloseCadastro} />}
+      {isCadastroOpen && (
+        <ModalCadastro
+          onClose={handleCloseCadastro}
+          onOpenLogin={handleOpenLogin} // Adicione esta linha
+        />
+      )}
     </>
   );
 }

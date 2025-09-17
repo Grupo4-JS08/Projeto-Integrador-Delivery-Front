@@ -4,8 +4,9 @@ import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { buscar, cadastrar, atualizar, deletar } from '../../services/Service';
 import { FaEdit, FaTrash, FaSignOutAlt } from 'react-icons/fa';
-import type Produto from '../../models/Produtos';
-import type Categoria from '../../models/Categorias';
+import type Produto from '../../models/Produto';
+import type Categoria from '../../models/Categoria';
+
 
 function Admin() {
   const { usuario, handleLogout } = useContext(AuthContext);

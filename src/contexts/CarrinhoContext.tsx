@@ -28,21 +28,21 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
 
   // Carregar carrinho do localStorage ao inicializar
   useEffect(() => {
-    const carrinhoSalvo = localStorage.getItem('carrinho');
+    const carrinhoSalvo = localStorage.getItem("carrinho");
     if (carrinhoSalvo) {
       try {
         const parsedItens = JSON.parse(carrinhoSalvo);
         setItens(parsedItens);
       } catch (error) {
         console.error("Erro ao carregar carrinho do localStorage:", error);
-        localStorage.removeItem('carrinho');
+        localStorage.removeItem("carrinho");
       }
     }
   }, []);
 
   // Salvar carrinho no localStorage sempre que mudar
   useEffect(() => {
-    localStorage.setItem('carrinho', JSON.stringify(itens));
+    localStorage.setItem("carrinho", JSON.stringify(itens));
   }, [itens]);
 
   async function adicionar(produtoId: number) {
@@ -67,13 +67,16 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
         const novoItem: CarrinhoItem = {
           produto: {
             id: produto.id,
+            nome: produto.nome || produto.item, // Adicione nome
             item: produto.item,
             valor: produto.valor,
+            preco: produto.valor, // Se preco for diferente de valor, ajuste
+            descricao: produto.descricao || "", // Adicione descrição
             calorias: produto.calorias,
             objetivo: produto.objetivo,
-            categoria: produto.categoria || null
+            categoria: produto.categoria || null,
           },
-          quantidade: 1
+          quantidade: 1,
         };
         setItens((prev) => [...prev, novoItem]);
       }
@@ -95,9 +98,7 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
     }
     setItens((prev) =>
       prev.map((i) =>
-        i.produto.id === id
-          ? { ...i, quantidade: quantidade }
-          : i
+        i.produto.id === id ? { ...i, quantidade: quantidade } : i
       )
     );
   }
@@ -107,7 +108,16 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CarrinhoContext.Provider value={{ itens, adicionar, remover, alterarQuantidade, limpar, carregando }}>
+    <CarrinhoContext.Provider
+      value={{
+        itens,
+        adicionar,
+        remover,
+        alterarQuantidade,
+        limpar,
+        carregando,
+      }}
+    >
       {children}
     </CarrinhoContext.Provider>
   );
