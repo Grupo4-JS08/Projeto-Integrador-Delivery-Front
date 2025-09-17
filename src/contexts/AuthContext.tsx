@@ -75,6 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
+    window.location.href = "/home"; // Redireciona para a página inicial após logout
   }
 
   // Salva dados do usuário no localStorage quando mudam

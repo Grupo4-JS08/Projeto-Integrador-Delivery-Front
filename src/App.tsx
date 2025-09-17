@@ -30,7 +30,6 @@ function App() {
           </Routes>
           </CarrinhoProvider>
         </div>
-
         <Footer />
       </div>
     </AuthProvider>
