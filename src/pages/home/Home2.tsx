@@ -212,7 +212,7 @@ function Home2() {
     );
   }
 
-  // Componente de Card
+
   const ProductCard = ({ produto }: { produto: Produto }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
       <div className="flex justify-between p-4">
