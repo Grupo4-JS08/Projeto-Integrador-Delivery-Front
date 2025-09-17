@@ -14,11 +14,7 @@ function NavBar2() {
         {/* Bloco branco do logo */}
         <div className="bg-white flex items-center justify-center px-4">
           <Link to={"/home2"}>
-          <img
-            src="/logo.png"
-            alt="DevLivery Logo"
-            className="h-16"
-          />
+            <img src="/logo.png" alt="DevLivery Logo" className="h-16" />
           </Link>
         </div>
 
@@ -46,12 +42,10 @@ function NavBar2() {
               Login
             </button>
           )}
-
           {/* Categorias */}
           <span className="text-white font-semibold text-lg text-center flex-1">
             Lanches Saudáveis · Marmitas Fit · Sucos
           </span>
-
           {/* Campo de pesquisa */}
           <div className="relative flex-1 max-w-xs">
             <input
@@ -64,8 +58,9 @@ function NavBar2() {
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           </div>
 
-          {/* Carrinho */}
-          <FaShoppingCart className="text-white text-2xl cursor-pointer hover:scale-110 transition" />
+          <Link to="/carrinho">
+            <FaShoppingCart className="text-white text-2xl cursor-pointer hover:scale-110 transition" />
+          </Link>{" "}
         </div>
       </div>
     </div>
