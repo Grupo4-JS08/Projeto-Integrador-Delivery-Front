@@ -13,44 +13,50 @@ import { Link } from "react-router-dom";
 
 const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id: number) => void }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
-    <div className="flex justify-between p-4">
-      <div className="flex-1">
-        <h3 className="font-bold text-lg">{produto.item}</h3>
-        <p className="text-sm text-gray-600">
-          {produto.categoria?.nome || "Sem categoria"}
-        </p>
-        <span className="font-bold text-gray-900 mt-2 block">
-          R$ {produto.valor.toFixed(2)}
-        </span>
+    <div className="flex justify-between p-4 h-full">
+      {/* Bloco esquerdo (infos + botão) */}
+      <div className="flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="font-bold text-lg">{produto.item}</h3>
+          <p className="text-sm text-gray-600">
+            {produto.categoria?.nome || "Sem categoria"}
+          </p>
+          <span className="font-bold text-gray-900 mt-2 block">
+            R$ {produto.valor.toFixed(2)}
+          </span>
 
-        <span className="text-xs text-gray-500">
-          {produto.calorias} calorias
-        </span>
-        <br/>
-        <span
-          className={`text-xs ${
-            produto.objetivo === "emagrecer"
-              ? "text-green-600"
-              : produto.objetivo === "hipertrofia"
-              ? "text-blue-600"
-              : "text-orange-600"
-          }`}
-        >
-          {produto.objetivo}
-        </span>
+          <span className="text-xs text-gray-500">
+            {produto.calorias} calorias
+          </span>
+          <br />
+          <span
+            className={`text-xs ${
+              produto.objetivo === "emagrecer"
+                ? "text-green-600"
+                : produto.objetivo === "hipertrofia"
+                ? "text-blue-600"
+                : "text-orange-600"
+            }`}
+          >
+            {produto.objetivo}
+          </span>
+        </div>
 
+        {/* Botão sempre embaixo */}
         <button
           onClick={() => adicionar(produto.id)}
-          className="mt-2 bg-orange-500 text-white px-3 py-1 rounded-full text-sm hover:bg-orange-600 transition"
+          className="mt-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm hover:bg-orange-600 transition w-fit cursor-pointer"
         >
           <FaShoppingCart className="inline mr-1" /> Adicionar
         </button>
       </div>
-      <div className="relative">
+
+      {/* Imagem na direita */}
+      <div className="relative ml-4 flex items-center">
         <img
           src={produto.categoria?.foto || "/lanche01.jpg"}
           alt={produto.item}
-          className="w-30 h-35 object-cover rounded"
+          className="w-28 h-28 object-cover rounded"
         />
       </div>
     </div>
@@ -173,25 +179,34 @@ function NavBar2({
 
         {/* Bloco verde da navbar */}
         <div className="bg-[#7E8C54] flex items-center justify-between flex-1 px-8 gap-6">
-          {/* Botão Olá Fulano ou Login */}
+          <NavBarSearch onSearchResults={onSearchResults} />
+
           {usuario && usuario.token ? (
             <>
               <div className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow">
                 Olá {usuario.nome}
               </div>
 
+              <button
+                onClick={handleLogout}
+                className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90 cursor-pointer"
+              >
+                Sair
+              </button>
+=======
+
+
             </>
           ) : (
             <button
               onClick={() => (window.location.href = "/home")}
-              className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90"
+              className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90 cursor-pointer"
             >
               Login
             </button>
           )}
 
-          {/* Campo de pesquisa por objetivo */}
-          <NavBarSearch onSearchResults={onSearchResults} />
+          
 
           <Link to="/carrinho">
             <FaShoppingCart className="text-white text-2xl cursor-pointer hover:scale-110 transition" />
@@ -483,7 +498,7 @@ function Home() {
                 <button
                   key={categoria.id}
                   onClick={() => setCategoriaSelecionada(categoria.nome)}
-                  className={`px-4 py-2 rounded-full text-sm ${
+                  className={`px-4 py-2 rounded-full text-sm cursor-pointer ${
                     categoriaSelecionada === categoria.nome
                       ? "bg-orange-500 text-white"
                       : "bg-gray-200 text-gray-800"
