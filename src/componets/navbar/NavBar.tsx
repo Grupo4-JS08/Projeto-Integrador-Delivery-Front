@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
-import { FaUser } from "react-icons/fa";
+import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ModalLogin from "../usuario/modallogin/ModalLogin";
 import ModalLogin2 from "../usuario/modallogin2/ModalLogin2";
@@ -76,7 +76,11 @@ function Navbar() {
         <div className="container mx-auto flex justify-between items-center py-2 px-6">
           {/* LOGO */}
           <Link to="/home" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="Logo DevLivery" className="h-auto max-w-60" />
+            <img
+              src="/logo.png"
+              alt="Logo DevLivery"
+              className="h-auto max-w-60"
+            />
           </Link>
 
           {/* MENU */}
@@ -96,11 +100,12 @@ function Navbar() {
                 Contato
               </Link>
             </div>
-
             {/* Botão de Login/Logout */}
             {usuario.token ? (
               <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-700">Olá, {usuario.nome}</span>
+                <span className="text-sm text-gray-700">
+                  Olá, {usuario.nome}
+                </span>
                 <button
                   type="button"
                   onClick={handleLogoutClick}
@@ -120,6 +125,9 @@ function Navbar() {
                 <span>Login</span>
               </button>
             )}
+            <Link to="/carrinho">
+              <FaShoppingCart className="text-orange text-2xl cursor-pointer hover:opacity-70 transition " />
+            </Link>{" "}
           </div>
         </div>
       </nav>
@@ -134,14 +142,10 @@ function Navbar() {
       />
 
       {/* ModalLogin2 (form de login) */}
-      {isLogin2Open && (
-        <ModalLogin2 onClose={handleCloseLogin2} />
-      )}
+      {isLogin2Open && <ModalLogin2 onClose={handleCloseLogin2} />}
 
       {/* ModalCadastro */}
-      {isCadastroOpen && (
-        <ModalCadastro onClose={handleCloseCadastro} />
-      )}
+      {isCadastroOpen && <ModalCadastro onClose={handleCloseCadastro} />}
     </>
   );
 }

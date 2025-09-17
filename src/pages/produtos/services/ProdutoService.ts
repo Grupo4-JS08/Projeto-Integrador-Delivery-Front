@@ -14,6 +14,11 @@ export const buscarProdutosPorCategoria = async (categoria: string): Promise<Pro
   return response.data;
 };
 
+export const buscarProdutoPorId = async (id: number): Promise<Produto> => {
+  const response = await api.get(`/produtos/${id}`);
+  return response.data;
+};
+
 export const buscarProdutosPorObjetivo = async (objetivo: string): Promise<Produto[]> => {
   const response = await api.get(`/produtos/recomendacao/${objetivo}`);
   return response.data;

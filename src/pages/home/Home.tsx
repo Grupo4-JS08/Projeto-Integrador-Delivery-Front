@@ -3,12 +3,13 @@
 
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import FooterInfo from "../../componets/footerinfo/FooterInfo";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type Produto from "../../models/Produto";
 import type Categoria from "../../models/Categoria";
 import { buscarCategorias } from "../categorias/services/CategoriaService";
 import { buscarProdutos } from "../produtos/services/ProdutoService";
 import Avaliacoes from "../../componets/avaliacoes/Avaliacoes";
+import { CarrinhoContext } from "../../contexts/CarrinhoContext";
 
 
 function Home() {
@@ -17,6 +18,8 @@ function Home() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>("");
   const [produtosFiltrados, setProdutosFiltrados] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
+  const { adicionar } = useContext(CarrinhoContext);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -62,7 +65,7 @@ function Home() {
   }
 
   // Componente de card pequeno
-  const ProductCard = ({ produto }: { produto: Produto }) => (
+   const ProductCard = ({ produto }: { produto: Produto }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
       <div className="flex justify-between p-4">
         <div className="flex-1">
@@ -83,6 +86,14 @@ function Home() {
             }`}>
             {produto.objetivo}
           </span>
+
+          {/* Botão para adicionar ao carrinho */}
+          <button
+            onClick={() => adicionar(produto.id)}
+            className="mt-2 bg-orange-500  text-white px-3 py-1 rounded-full text-sm hover:bg-orange-600 transition"
+          >
+            <FaShoppingCart className="absolute bottom-2 right-2 text-[#FF9800] " />
+          </button>
         </div>
         <div className="relative">
           <img
@@ -90,7 +101,7 @@ function Home() {
             alt={produto.item}
             className="w-30 h-35 object-cover rounded"
           />
-          <FaShoppingCart className="absolute bottom-2 right-2 text-[#FF9800] text-xl" />
+
         </div>
       </div>
     </div>
