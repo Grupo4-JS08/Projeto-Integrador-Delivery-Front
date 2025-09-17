@@ -126,7 +126,7 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
           onFocus={handleFocus}
           onBlur={handleBlur}
           className="w-full pl-10 pr-4 py-2 rounded-full
-                   bg-white text-black
+                   bg-[#FFF5DC] text-black
                    focus:outline-none focus:ring-2 focus:ring-[#FF9800] focus:border-[#FF9800]"
         />
         <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
@@ -158,59 +158,23 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
   );
 }
 
-// Componente NavBar2 atualizado
 function NavBar2({
   onSearchResults,
 }: {
   onSearchResults: (produtos: Produto[], objetivo: string) => void;
 }) {
-  const { usuario, handleLogout } = useContext(AuthContext);
 
   return (
     <div className="mt-2">
       {/* Removido overflow-hidden e adicionado relative */}
       <div className="relative flex items-stretch container mx-auto rounded-lg">
         {/* Bloco do logo */}
-        <div className="bg-[#7E8C54] flex items-center justify-center px-4">
-          <Link to={"/home2"}>
-            <img src="/logo.png" alt="DevLivery Logo" className="h-16" />
-          </Link>
-        </div>
+
 
         {/* Bloco verde da navbar */}
-        <div className="bg-[#7E8C54] flex items-center justify-between flex-1 px-8 gap-6">
+        <div className=" flex items-center justify-between flex-1 px-8 gap-6">
           <NavBarSearch onSearchResults={onSearchResults} />
 
-          {usuario && usuario.token ? (
-            <>
-              <div className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow">
-                Olá {usuario.nome}
-              </div>
-
-              <button
-                onClick={handleLogout}
-                className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90 cursor-pointer"
-              >
-                Sair
-              </button>
-=======
-
-
-            </>
-          ) : (
-            <button
-              onClick={() => (window.location.href = "/home")}
-              className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90 cursor-pointer"
-            >
-              Login
-            </button>
-          )}
-
-          
-
-          <Link to="/carrinho">
-            <FaShoppingCart className="text-white text-2xl cursor-pointer hover:scale-110 transition" />
-          </Link>
         </div>
       </div>
     </div>

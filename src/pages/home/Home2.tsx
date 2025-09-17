@@ -107,7 +107,7 @@ function Home2() {
         );
         alert("Produto excluído com sucesso!");
       } catch (error) {
-        console.error("Erro ao excluir produto:", error);
+        console.error("Erro ao excluir produto:", "error");
         alert("Erro ao excluir produto");
       } finally {
         setProdutoParaExcluir(null);
