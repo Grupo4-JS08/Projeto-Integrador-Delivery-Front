@@ -1,9 +1,8 @@
-// App.tsx
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Contato from './pages/contato/Contato';
 import Home from './pages/home/Home';
 import Produtos from './pages/produtos/Produtos';
-import Carrinho from './pages/carrinho/Carrinho'; // Importar a página do carrinho
+import Carrinho from './pages/carrinho/Carrinho'; 
 import { AuthProvider } from './contexts/AuthContext';
 
 import Home2 from './pages/home/Home2';
@@ -28,7 +27,7 @@ function App() {
               <Route path="/produtos" element={<Produtos />} />
               <Route path="/ofertas" element={<Home />} />
               <Route path="/contato" element={<Contato />} />
-              <Route path="/carrinho" element={<Carrinho />} /> {/* Rota do carrinho */}
+              <Route path="/carrinho" element={<Carrinho />} /> 
             </Routes>
           </CarrinhoProvider>
         </div>

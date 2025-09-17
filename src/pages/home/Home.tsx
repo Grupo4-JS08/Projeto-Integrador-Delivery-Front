@@ -11,7 +11,6 @@ import { CarrinhoContext } from "../../contexts/CarrinhoContext";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
-// Componente de card pequeno (movido para fora da função Home)
 const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id: number) => void }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
     <div className="flex justify-between p-4">
@@ -28,13 +27,18 @@ const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id:
           {produto.calorias} calorias
         </span>
         <br/>
-        <span className={`text-xs ${produto.objetivo === 'emagrecer' ? 'text-green-600' :
-          produto.objetivo === 'hipertrofia' ? 'text-blue-600' : 'text-orange-600'
-          }`}>
+        <span
+          className={`text-xs ${
+            produto.objetivo === "emagrecer"
+              ? "text-green-600"
+              : produto.objetivo === "hipertrofia"
+              ? "text-blue-600"
+              : "text-orange-600"
+          }`}
+        >
           {produto.objetivo}
         </span>
 
-        {/* Botão para adicionar ao carrinho */}
         <button
           onClick={() => adicionar(produto.id)}
           className="mt-2 bg-orange-500 text-white px-3 py-1 rounded-full text-sm hover:bg-orange-600 transition"
@@ -53,7 +57,6 @@ const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id:
   </div>
 );
 
-// Componente NavBarSearch para pesquisa por objetivo
 interface NavBarSearchProps {
   onSearchResults: (produtos: Produto[], objetivo: string) => void;
 }
@@ -66,10 +69,10 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
   const objetivos = [
     { value: "hipertrofia", label: "Hipertrofia" },
     { value: "emagrecer", label: "Emagrecer" },
-    { value: "geral", label: "Geral" }
+    { value: "geral", label: "Geral" },
   ];
 
-  const handleObjetivoSearch = async (objetivo: string) => {
+  async function handleObjetivoSearch(objetivo: string) {
     setIsLoading(true);
     setIsDropdownOpen(false);
     setSearchTerm(objetivo);
@@ -77,33 +80,45 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
     try {
       const produtos = await buscarProdutosPorObjetivo(objetivo);
       onSearchResults(produtos, objetivo);
-      // Scroll para a seção de resultados
-      document.getElementById("resultados-pesquisa")?.scrollIntoView({ behavior: "smooth" });
+      document
+        .getElementById("resultados-pesquisa")
+        ?.scrollIntoView({ behavior: "smooth" });
     } catch (error) {
       console.error("Erro ao buscar produtos por objetivo:", error);
       onSearchResults([], objetivo);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setIsDropdownOpen(e.target.value.length > 0);
+    setIsDropdownOpen(true); // abre mesmo digitando 1 letra
   };
 
-  const filteredObjetivos = objetivos.filter(objetivo =>
-    objetivo.label.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFocus = () => setIsDropdownOpen(true);
+  const handleBlur = () => {
+    // pequeno delay para permitir o clique no item do menu
+    setTimeout(() => setIsDropdownOpen(false), 150);
+  };
+
+  const filteredObjetivos =
+    searchTerm.trim() === ""
+      ? objetivos
+      : objetivos.filter((objetivo) =>
+          objetivo.label.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
   return (
-    <div className="relative flex-1 max-w-xs">
+    <div className="relative flex-1 max-w-xs overflow-visible">
       <div className="relative">
         <input
           type="text"
           placeholder="Buscar por objetivo..."
           value={searchTerm}
           onChange={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           className="w-full pl-10 pr-4 py-2 rounded-full
                    bg-white text-black
                    focus:outline-none focus:ring-2 focus:ring-[#FF9800] focus:border-[#FF9800]"
@@ -122,12 +137,13 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
           {filteredObjetivos.map((objetivo) => (
             <button
               key={objetivo.value}
-              onClick={() => handleObjetivoSearch(objetivo.value)}
-              className="w-full px-4 py-3 text-left hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg
-                       transition-colors duration-200"
+              onMouseDown={() => handleObjetivoSearch(objetivo.value)} // onMouseDown evita perder foco antes do clique
+              className="w-full px-4 py-3 text-left hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg transition-colors duration-200"
             >
               <div className="font-semibold text-gray-800">{objetivo.label}</div>
-              <div className="text-sm text-gray-500">Buscar produtos para {objetivo.label.toLowerCase()}</div>
+              <div className="text-sm text-gray-500">
+                Buscar produtos para {objetivo.label.toLowerCase()}
+              </div>
             </button>
           ))}
         </div>
@@ -137,14 +153,19 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
 }
 
 // Componente NavBar2 atualizado
-function NavBar2({ onSearchResults }: { onSearchResults: (produtos: Produto[], objetivo: string) => void }) {
+function NavBar2({
+  onSearchResults,
+}: {
+  onSearchResults: (produtos: Produto[], objetivo: string) => void;
+}) {
   const { usuario, handleLogout } = useContext(AuthContext);
 
   return (
     <div className="mt-2">
-      <div className="flex items-stretch container mx-auto rounded-lg overflow-hidden">
-        {/* Bloco branco do logo */}
-        <div className="bg-white flex items-center justify-center px-4">
+      {/* Removido overflow-hidden e adicionado relative */}
+      <div className="relative flex items-stretch container mx-auto rounded-lg">
+        {/* Bloco do logo */}
+        <div className="bg-[#7E8C54] flex items-center justify-center px-4">
           <Link to={"/home2"}>
             <img src="/logo.png" alt="DevLivery Logo" className="h-16" />
           </Link>
@@ -186,7 +207,6 @@ function NavBar2({ onSearchResults }: { onSearchResults: (produtos: Produto[], o
   );
 }
 
-// Componente de exibição de resultados da pesquisa
 interface SearchResultsProps {
   produtos: Produto[];
   objetivo: string;
@@ -203,11 +223,17 @@ function SearchResults({ produtos, objetivo, adicionar }: SearchResultsProps) {
       </h2>
 
       {produtos.length === 0 ? (
-        <p className="text-center text-gray-500 py-8">Nenhum produto encontrado para este objetivo.</p>
+        <p className="text-center text-gray-500 py-8">
+          Nenhum produto encontrado para este objetivo.
+        </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {produtos.map((produto) => (
-            <ProductCard key={produto.id} produto={produto} adicionar={adicionar} />
+            <ProductCard
+              key={produto.id}
+              produto={produto}
+              adicionar={adicionar}
+            />
           ))}
         </div>
       )}
@@ -215,7 +241,6 @@ function SearchResults({ produtos, objetivo, adicionar }: SearchResultsProps) {
   );
 }
 
-// Componente Home principal
 function Home() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -233,13 +258,12 @@ function Home() {
 
         const [categoriasData, produtosData] = await Promise.all([
           buscarCategorias(),
-          buscarProdutos()
+          buscarProdutos(),
         ]);
 
         setCategorias(categoriasData);
         setProdutos(produtosData);
         setProdutosFiltrados(produtosData);
-
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
       } finally {
@@ -254,8 +278,10 @@ function Home() {
     if (categoriaSelecionada === "") {
       setProdutosFiltrados(produtos);
     } else {
-      const filtrados = produtos.filter(produto =>
-        produto.categoria?.nome.toLowerCase() === categoriaSelecionada.toLowerCase()
+      const filtrados = produtos.filter(
+        (produto) =>
+          produto.categoria?.nome.toLowerCase() ===
+          categoriaSelecionada.toLowerCase()
       );
       setProdutosFiltrados(filtrados);
     }
@@ -289,8 +315,9 @@ function Home() {
 
   // Filtra produtos por categoria específica (para as seções)
   const getProdutosPorCategoria = (nomeCategoria: string) => {
-    return produtos.filter(produto =>
-      produto.categoria?.nome.toLowerCase() === nomeCategoria.toLowerCase()
+    return produtos.filter(
+      (produto) =>
+        produto.categoria?.nome.toLowerCase() === nomeCategoria.toLowerCase()
     );
   };
 
@@ -308,7 +335,11 @@ function Home() {
 
       {/* Exibe resultados da pesquisa se houver */}
       {searchObjective && (
-        <SearchResults produtos={searchResults} objetivo={searchObjective} adicionar={adicionar} />
+        <SearchResults
+          produtos={searchResults}
+          objetivo={searchObjective}
+          adicionar={adicionar}
+        />
       )}
 
       {/* Conteúdo principal apenas se não houver pesquisa ativa */}
@@ -363,7 +394,10 @@ function Home() {
           {/* SEÇÃO CARDS DE PROMOÇÕES */}
           <section className="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Card 1 */}
-            <a href="/promocoes" className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block">
+            <a
+              href="/promocoes"
+              className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
+            >
               <img
                 src="/saudavel02.jpg"
                 alt="Mais promoções"
@@ -374,15 +408,24 @@ function Home() {
               {/* caixinha opaca atrás do texto */}
               <div className="absolute bottom-3 left-3 right-3">
                 <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
-                  <span className="block text-xs">Aproveite nossas promoções parceiras</span>
-                  <h3 className="mt-0.5 font-bold text-lg leading-tight">Mais promoções</h3>
+                  <span className="block text-xs">
+                    Aproveite nossas promoções parceiras
+                  </span>
+                  <h3 className="mt-0.5 font-bold text-lg leading-tight">
+                    Mais promoções
+                  </h3>
                 </div>
               </div>
-              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">-20%</span>
+              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
+                -20%
+              </span>
             </a>
 
             {/* Card 2 */}
-            <a href="/vegan" className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block">
+            <a
+              href="/vegan"
+              className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
+            >
               <img
                 src="/lanche01.jpg"
                 alt="Comidas veganas"
@@ -392,14 +435,21 @@ function Home() {
               <div className="absolute bottom-3 left-3 right-3">
                 <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
                   <span className="block text-xs">Aqui você encontra</span>
-                  <h3 className="mt-0.5 font-bold text-lg leading-tight">Comidas veganas</h3>
+                  <h3 className="mt-0.5 font-bold text-lg leading-tight">
+                    Comidas veganas
+                  </h3>
                 </div>
               </div>
-              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">-30%</span>
+              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
+                -30%
+              </span>
             </a>
 
             {/* Card 3 */}
-            <a href="/detox" className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block">
+            <a
+              href="/detox"
+              className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
+            >
               <img
                 src="https://i.pinimg.com/736x/1e/3b/42/1e3b4299531ae69bf823a58d850038d7.jpg"
                 alt="Linha Detox"
@@ -409,10 +459,14 @@ function Home() {
               <div className="absolute bottom-3 left-3 right-3">
                 <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
                   <span className="block text-xs">Sempre o melhor para você</span>
-                  <h3 className="mt-0.5 font-bold text-lg leading-tight">Conheça nossa linha Detox</h3>
+                  <h3 className="mt-0.5 font-bold text-lg leading-tight">
+                    Conheça nossa linha Detox
+                  </h3>
                 </div>
               </div>
-              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">-10%</span>
+              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
+                -10%
+              </span>
             </a>
           </section>
 
@@ -422,7 +476,11 @@ function Home() {
             <div className="flex flex-wrap gap-2 mb-6">
               <button
                 onClick={() => setCategoriaSelecionada("")}
-                className={`px-4 py-2 rounded-full text-sm ${categoriaSelecionada === "" ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-800"}`}
+                className={`px-4 py-2 rounded-full text-sm ${
+                  categoriaSelecionada === ""
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
               >
                 Todos
               </button>
@@ -430,7 +488,11 @@ function Home() {
                 <button
                   key={categoria.id}
                   onClick={() => setCategoriaSelecionada(categoria.nome)}
-                  className={`px-4 py-2 rounded-full text-sm ${categoriaSelecionada === categoria.nome ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-800"}`}
+                  className={`px-4 py-2 rounded-full text-sm ${
+                    categoriaSelecionada === categoria.nome
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-200 text-gray-800"
+                  }`}
                 >
                   {categoria.nome}
                 </button>
@@ -449,7 +511,11 @@ function Home() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {produtosFiltrados.map((produto) => (
-                  <ProductCard key={produto.id} produto={produto} adicionar={adicionar} />
+                  <ProductCard
+                    key={produto.id}
+                    produto={produto}
+                    adicionar={adicionar}
+                  />
                 ))}
               </div>
             )}
@@ -457,18 +523,27 @@ function Home() {
 
           {/* SEÇÕES ESPECÍFICAS POR CATEGORIA */}
           {categorias.map((categoria) => {
-            const produtosCategoria = getProdutosPorCategoria(categoria.nome).slice(0, 4);
+            const produtosCategoria = getProdutosPorCategoria(categoria.nome).slice(
+              0,
+              4
+            );
 
             if (produtosCategoria.length === 0) return null;
 
             return (
               <section key={categoria.id} className="container mx-auto mt-12">
-                <h2 className="text-2xl font-bold text-orange-500 mb-6">{categoria.nome}</h2>
+                <h2 className="text-2xl font-bold text-orange-500 mb-6">
+                  {categoria.nome}
+                </h2>
                 <p className="text-gray-600 mb-4">{categoria.descricao}</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                   {produtosCategoria.map((produto) => (
-                    <ProductCard key={produto.id} produto={produto} adicionar={adicionar} />
+                    <ProductCard
+                      key={produto.id}
+                      produto={produto}
+                      adicionar={adicionar}
+                    />
                   ))}
                 </div>
               </section>
