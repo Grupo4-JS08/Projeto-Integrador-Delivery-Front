@@ -61,7 +61,7 @@ function Home() {
     );
   }
 
-  // Componente de card CORRIGIDO
+  // Componente de card pequeno
   const ProductCard = ({ produto }: { produto: Produto }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
       <div className="flex justify-between p-4">
@@ -73,18 +73,20 @@ function Home() {
           <span className="font-bold text-gray-900 mt-2 block">
             R$ {produto.valor.toFixed(2)}
           </span>
+
           <span className="text-xs text-gray-500">
             {produto.calorias} calorias
           </span>
+          <br/>
           <span className={`text-xs ${produto.objetivo === 'emagrecer' ? 'text-green-600' :
-            produto.objetivo === 'hipertrofia' ? 'text-blue-600' : 'text-gray-600'
+            produto.objetivo === 'hipertrofia' ? 'text-blue-600' : 'text-orange-600'
             }`}>
             {produto.objetivo}
           </span>
         </div>
         <div className="relative">
           <img
-            src={produto.categoria?.foto || "/lanche01.jpg"} // ← CORRIGIDO: foto é opcional
+            src={produto.categoria?.foto || "/lanche01.jpg"}
             alt={produto.item}
             className="w-30 h-35 object-cover rounded"
           />
@@ -94,11 +96,11 @@ function Home() {
     </div>
   );
 
-  // Componente de card grande CORRIGIDO
+  // Componente de card grande
   const ProductCardLarge = ({ produto }: { produto: Produto }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
       <img
-        src={produto.categoria?.foto || "/saudavel02.jpg"} // ← CORRIGIDO
+        src={produto.categoria?.foto || "/saudavel02.jpg"}
         alt={produto.item}
         className="w-full h-50 object-cover"
       />

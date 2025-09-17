@@ -1,55 +1,70 @@
-import { useContext, useEffect, useState, type ChangeEvent, type FormEvent, useCallback } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  useContext,
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  useCallback,
+} from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { PulseLoader } from "react-spinners";
 import { IoMdClose } from "react-icons/io";
 import { AiOutlineMail } from "react-icons/ai";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 interface ModalLogin2Props {
   onClose: () => void;
 }
 
 function ModalLogin2({ onClose }: ModalLogin2Props) {
-  const { usuario, handleLogin, isLoading } = useContext(AuthContext);
-  const navigate = useNavigate(); 
+  const { usuario, handleLogin } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [usuarioLogin, setUsuarioLogin] = useState({
     usuario: "",
     senha: "",
   });
 
-  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setUsuarioLogin((prev) => ({ ...prev, [name]: value }));
+    // Limpa o erro quando o usuário começa a digitar
+    if (loginError) {
+      setLoginError(null);
+    }
   }
 
   async function login(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setHasSubmitted(true);
-    setLoginError(null); 
-    await handleLogin(usuarioLogin);
+    setIsSubmitting(true);
+    setLoginError(null);
+
+    try {
+      await handleLogin(usuarioLogin).then((usuario: any) => {
+        setIsSubmitting(false);
+        console.log("Usuário logado com sucesso:", usuario);
+        onClose();
+      });
+    } catch (error: any) {
+      // Captura o erro específico do backend
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.response?.data ||
+        "Usuário ou senha incorretos. Verifique suas credenciais.";
+      setLoginError(errorMessage);
+      setIsSubmitting(false);
+      console.error("Erro ao fazer login:", error);
+    }
   }
 
-  useEffect(() => {
-    if (!hasSubmitted) return;
-
-    if (!isLoading) {
-      if (usuario.token && usuario.token.trim() !== "") {
-        
-        navigate('/home2'); 
-        onClose();
-      } else {
-        
-        setLoginError("Usuário ou senha incorretos.");
-      }
-    }
-  }, [usuario?.token, isLoading, hasSubmitted, onClose, navigate]); 
-
+  // Fecha com tecla ESC
   useEffect(() => {
     const onKey = (ev: KeyboardEvent) => {
       if (ev.key === "Escape") onClose();
@@ -58,6 +73,7 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  // Fecha ao clicar no backdrop
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) onClose();
@@ -65,24 +81,12 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
     [onClose]
   );
 
-
-  // Reage às mudanças de token/isLoading após uma tentativa de login
+  // Limpa o erro quando o modal é fechado
   useEffect(() => {
-    if (!hasSubmitted) return;
-
-    // Quando terminar de carregar, checamos o token
-    if (!isLoading) {
-      if (usuario.token && usuario.token.trim() !== "") {
-        // sucesso: fecha modal
-        localStorage.setItem("token", usuario.token);
-        onClose();
-      } else {
-        // falhou: mostra erro local
-        setLoginError("Usuário ou senha incorretos.");
-      }
-    }
-  }, [usuario?.token, isLoading, hasSubmitted, onClose]);
-
+    return () => {
+      setLoginError(null);
+    };
+  }, []);
 
   return (
     <div
@@ -105,11 +109,14 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
           <img
             src="/LogoDevLivery.png"
             alt="Logo DevLivery"
-            className="mx-auto w-40"
+            className="mx-auto w-60"
           />
         </div>
 
-        <h2 id="modal-login2-title" className="text-[#f79009] font-bold text-lg mb-4">
+        <h2
+          id="modal-login2-title"
+          className="text-[#f79009] font-bold text-lg mb-4"
+        >
           Bem-vindo de volta
         </h2>
 
@@ -123,6 +130,7 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
               onChange={atualizarEstado}
               className="w-full px-4 py-2 pr-10 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
               required
+              disabled={isSubmitting}
             />
             <AiOutlineMail
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 pointer-events-none"
@@ -140,6 +148,7 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
               className="w-full px-4 py-2 pr-10 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
               required
               minLength={6}
+              disabled={isSubmitting}
             />
             <button
               type="button"
@@ -147,28 +156,39 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700"
               aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
               aria-pressed={mostrarSenha}
+              disabled={isSubmitting}
             >
               {mostrarSenha ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
+          {/* Mensagem de erro */}
           {loginError && (
-            <p className="text-sm text-[#EAAA00] font-medium">
-              {loginError}
-            </p>
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600 font-medium text-center">
+                {loginError}
+              </p>
+            </div>
           )}
 
           <button
             type="submit"
             className="w-full bg-[#f79009] hover:bg-[#e28200] text-white font-bold py-2 rounded-full transition disabled:opacity-70"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {isLoading ? <PulseLoader color="#fff" size={10} /> : "Logar"}
+            {isSubmitting ? <PulseLoader color="#fff" size={10} /> : "Logar"}
           </button>
         </form>
 
-        <p className="text-sm mt-4 underline text-[#1e293b] cursor-pointer hover:text-[#f79009]">
-          Esqueci a senha
+        <p className="text-sm mt-4 text-[#1e293b]">
+          Não tem conta?{" "}
+          <button
+            type="button"
+            className="underline hover:text-[#f79009]"
+            onClick={onClose}
+          >
+            Cadastre-se
+          </button>
         </p>
       </div>
     </div>

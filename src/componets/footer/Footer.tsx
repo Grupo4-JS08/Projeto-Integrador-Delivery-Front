@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
       <div className="max-w-8xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
 
         <div>
-          <img src="/LogoDevLivery.png" alt="DevLivery Logo" className="w-40" />
+          <img src="/LogoDevLivery.png" alt="DevLivery Logo" className="w-60" />
           <a href="#">
             <img src="" alt="" className="" />
           </a>

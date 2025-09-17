@@ -4,6 +4,7 @@ import { createContext, useState, useEffect, type ReactNode } from "react";
 import { login } from "../services/Service";
 import type Usuario from "../models/Usuario";
 import type UsuarioLogin from "../models/UsuarioLogin";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextProps {
   usuario: Usuario;
@@ -19,6 +20,7 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const navigate = useNavigate();
   const [usuario, setUsuario] = useState<Usuario>(() => {
     // Recupera dados do usuário do localStorage se disponível
     const usuarioSalvo = localStorage.getItem("usuario");
@@ -48,25 +50,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
     try {
       // Mude para o endpoint CORRETO: "/usuarios/logar"
-      await login("/usuarios/logar", usuarioLogin, (userData: Usuario) => {
-        const usuarioCompleto = {
-          ...userData,
-          isMasterAdmin: Boolean(userData.isMasterAdmin),
-        };
-        setUsuario(usuarioCompleto);
-      });
+      return await login(
+        "/usuarios/logar",
+        usuarioLogin,
+        (userData: Usuario) => {
+          const usuarioCompleto = {
+            ...userData,
+            isMasterAdmin: Boolean(userData.isMasterAdmin),
+          };
+          console.log("Dados do usuário após login:", usuarioCompleto);
+          setUsuario(usuarioCompleto);
+          setIsLoading(false);
+
+          if (usuarioCompleto.isMasterAdmin) {
+            navigate("/home2");
+          } else {
+            navigate("/home");
+          }
+          return usuarioCompleto;
+        }
+      );
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       throw error;
     }
-    setIsLoading(false);
   }
 
   function handleLogout() {
     setUsuario({
       id: 0,
       nome: "",
-      email: "",
+      usuario: "",
       senha: "",
       objetivo: "geral",
       endereco: "",

@@ -4,8 +4,18 @@ import FooterInfo from "../../componets/footerinfo/FooterInfo";
 import { useEffect, useState } from "react";
 import type Produto from "../../models/Produto";
 import type Categoria from "../../models/Categoria";
-import { buscarCategorias, criarCategoria, atualizarCategoria, deletarCategoria } from "../categorias/services/CategoriaService";
-import { buscarProdutos, deletarProduto, atualizarProduto, criarProduto } from "../produtos/services/ProdutoService";
+import {
+  buscarCategorias,
+  criarCategoria,
+  atualizarCategoria,
+  deletarCategoria,
+} from "../categorias/services/CategoriaService";
+import {
+  buscarProdutos,
+  deletarProduto,
+  atualizarProduto,
+  criarProduto,
+} from "../produtos/services/ProdutoService";
 import NavBar2 from "../../componets/navbar/NavBar2";
 
 function Home2() {
@@ -26,7 +36,9 @@ function Home2() {
   });
 
   // Estados para modais de categorias
-  const [categoriaEditando, setCategoriaEditando] = useState<Categoria | null>(null);
+  const [categoriaEditando, setCategoriaEditando] = useState<Categoria | null>(
+    null
+  );
   const [novaCategoria, setNovaCategoria] = useState<Partial<Categoria>>({
     nome: "",
     descricao: "",
@@ -35,8 +47,11 @@ function Home2() {
   const [mostrarModalProduto, setMostrarModalProduto] = useState(false);
   const [mostrarModalCategoria, setMostrarModalCategoria] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
-  const [produtoParaExcluir, setProdutoParaExcluir] = useState<Produto | null>(null);
-  const [categoriaParaExcluir, setCategoriaParaExcluir] = useState<Categoria | null>(null);
+  const [produtoParaExcluir, setProdutoParaExcluir] = useState<Produto | null>(
+    null
+  );
+  const [categoriaParaExcluir, setCategoriaParaExcluir] =
+    useState<Categoria | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -86,8 +101,10 @@ function Home2() {
     if (produtoParaExcluir) {
       try {
         await deletarProduto(produtoParaExcluir.id);
-        setProdutos(produtos.filter(p => p.id !== produtoParaExcluir.id));
-        setProdutosFiltrados(produtosFiltrados.filter(p => p.id !== produtoParaExcluir.id));
+        setProdutos(produtos.filter((p) => p.id !== produtoParaExcluir.id));
+        setProdutosFiltrados(
+          produtosFiltrados.filter((p) => p.id !== produtoParaExcluir.id)
+        );
         alert("Produto excluído com sucesso!");
       } catch (error) {
         console.error("Erro ao excluir produto:", error);
@@ -102,8 +119,16 @@ function Home2() {
     try {
       if (modoEdicao && produtoEditando) {
         const produtoAtualizado = await atualizarProduto(produtoEditando);
-        setProdutos(produtos.map(p => p.id === produtoAtualizado.id ? produtoAtualizado : p));
-        setProdutosFiltrados(produtosFiltrados.map(p => p.id === produtoAtualizado.id ? produtoAtualizado : p));
+        setProdutos(
+          produtos.map((p) =>
+            p.id === produtoAtualizado.id ? produtoAtualizado : p
+          )
+        );
+        setProdutosFiltrados(
+          produtosFiltrados.map((p) =>
+            p.id === produtoAtualizado.id ? produtoAtualizado : p
+          )
+        );
         alert("Produto atualizado com sucesso!");
       } else {
         const produtoCriado = await criarProduto(novoProduto);
@@ -134,7 +159,9 @@ function Home2() {
     if (categoriaParaExcluir) {
       try {
         await deletarCategoria(categoriaParaExcluir.id);
-        setCategorias(categorias.filter(c => c.id !== categoriaParaExcluir.id));
+        setCategorias(
+          categorias.filter((c) => c.id !== categoriaParaExcluir.id)
+        );
         alert("Categoria excluída com sucesso!");
       } catch (error) {
         console.error("Erro ao excluir categoria:", error);
@@ -149,7 +176,11 @@ function Home2() {
     try {
       if (modoEdicao && categoriaEditando) {
         const categoriaAtualizada = await atualizarCategoria(categoriaEditando);
-        setCategorias(categorias.map(c => c.id === categoriaAtualizada.id ? categoriaAtualizada : c));
+        setCategorias(
+          categorias.map((c) =>
+            c.id === categoriaAtualizada.id ? categoriaAtualizada : c
+          )
+        );
         alert("Categoria atualizada com sucesso!");
       } else {
         const categoriaCriada = await criarCategoria(novaCategoria);
@@ -185,12 +216,15 @@ function Home2() {
   const ProductCard = ({ produto }: { produto: Produto }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
       <div className="flex justify-between p-4">
-        <div className="flex-1">
+        <div className=" w-1/2">
           <h3 className="font-bold text-lg">{produto.item}</h3>
           <div className="flex items-center mb-2">
-            <span className="text-sm text-gray-600 mr-2">Categoria:</span>
+            <br />
+            <br />
             <button
-              onClick={() => produto.categoria && handleEditarCategoria(produto.categoria)}
+              onClick={() =>
+                produto.categoria && handleEditarCategoria(produto.categoria)
+              }
               className="text-sm text-[#7E8C54] hover:text-[#6a7a48] flex items-center"
             >
               <FaTag className="mr-1" size={12} />
@@ -203,18 +237,24 @@ function Home2() {
           <span className="text-xs text-gray-500">
             {produto.calorias} calorias
           </span>
-          <span className={`text-xs ${
-            produto.objetivo === "emagrecer" ? "text-green-600" :
-            produto.objetivo === "hipertrofia" ? "text-blue-600" : "text-gray-600"
-          }`}>
+          <br />
+          <span
+            className={`text-xs ${
+              produto.objetivo === "emagrecer"
+                ? "text-green-600"
+                : produto.objetivo === "hipertrofia"
+                  ? "text-blue-600"
+                  : "text-gray-600"
+            }`}
+          >
             {produto.objetivo}
           </span>
         </div>
-        <div className="relative">
+        <div className="relative w-1/2">
           <img
             src={produto.categoria?.foto || "/lanche01.jpg"}
             alt={produto.item}
-            className="w-40 h-35 object-cover rounded-3xl"
+            className="w-full h-auto object-cover rounded-3xl"
           />
           <div className="w-15 absolute bottom-0 flex align-middle justify-center right-0 p-2 shadow-md bg-white bg-opacity-90 rounded-br-lg rounded-tl-lg">
             <button
@@ -295,52 +335,107 @@ function Home2() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Nome do Item</label>
+                <label className="block text-sm font-medium mb-1">
+                  Nome do Item
+                </label>
                 <input
                   type="text"
-                  value={modoEdicao ? produtoEditando?.item || "" : novoProduto.item || ""}
-                  onChange={(e) => modoEdicao
-                    ? setProdutoEditando({...produtoEditando!, item: e.target.value})
-                    : setNovoProduto({...novoProduto, item: e.target.value})
+                  value={
+                    modoEdicao
+                      ? produtoEditando?.item || ""
+                      : novoProduto.item || ""
+                  }
+                  onChange={(e) =>
+                    modoEdicao
+                      ? setProdutoEditando({
+                          ...produtoEditando!,
+                          item: e.target.value,
+                        })
+                      : setNovoProduto({ ...novoProduto, item: e.target.value })
                   }
                   className="w-full p-2 border rounded"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Valor (R$)</label>
+                <label className="block text-sm font-medium mb-1">
+                  Valor (R$)
+                </label>
                 <input
                   type="number"
                   step="0.01"
-                  value={modoEdicao ? produtoEditando?.valor || 0 : novoProduto.valor || 0}
-                  onChange={(e) => modoEdicao
-                    ? setProdutoEditando({...produtoEditando!, valor: parseFloat(e.target.value)})
-                    : setNovoProduto({...novoProduto, valor: parseFloat(e.target.value)})
+                  value={
+                    modoEdicao
+                      ? produtoEditando?.valor || 0
+                      : novoProduto.valor || 0
+                  }
+                  onChange={(e) =>
+                    modoEdicao
+                      ? setProdutoEditando({
+                          ...produtoEditando!,
+                          valor: parseFloat(e.target.value),
+                        })
+                      : setNovoProduto({
+                          ...novoProduto,
+                          valor: parseFloat(e.target.value),
+                        })
                   }
                   className="w-full p-2 border rounded"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Calorias</label>
+                <label className="block text-sm font-medium mb-1">
+                  Calorias
+                </label>
                 <input
                   type="number"
-                  value={modoEdicao ? produtoEditando?.calorias || 0 : novoProduto.calorias || 0}
-                  onChange={(e) => modoEdicao
-                    ? setProdutoEditando({...produtoEditando!, calorias: parseInt(e.target.value)})
-                    : setNovoProduto({...novoProduto, calorias: parseInt(e.target.value)})
+                  value={
+                    modoEdicao
+                      ? produtoEditando?.calorias || 0
+                      : novoProduto.calorias || 0
+                  }
+                  onChange={(e) =>
+                    modoEdicao
+                      ? setProdutoEditando({
+                          ...produtoEditando!,
+                          calorias: parseInt(e.target.value),
+                        })
+                      : setNovoProduto({
+                          ...novoProduto,
+                          calorias: parseInt(e.target.value),
+                        })
                   }
                   className="w-full p-2 border rounded"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Objetivo</label>
+                <label className="block text-sm font-medium mb-1">
+                  Objetivo
+                </label>
                 <select
-                  value={modoEdicao ? produtoEditando?.objetivo || "geral" : novoProduto.objetivo || "geral"}
-                  onChange={(e) => modoEdicao
-                    ? setProdutoEditando({...produtoEditando!, objetivo: e.target.value as "emagrecer" | "hipertrofia" | "geral"})
-                    : setNovoProduto({...novoProduto, objetivo: e.target.value as "emagrecer" | "hipertrofia" | "geral"})
+                  value={
+                    modoEdicao
+                      ? produtoEditando?.objetivo || "geral"
+                      : novoProduto.objetivo || "geral"
+                  }
+                  onChange={(e) =>
+                    modoEdicao
+                      ? setProdutoEditando({
+                          ...produtoEditando!,
+                          objetivo: e.target.value as
+                            | "emagrecer"
+                            | "hipertrofia"
+                            | "geral",
+                        })
+                      : setNovoProduto({
+                          ...novoProduto,
+                          objetivo: e.target.value as
+                            | "emagrecer"
+                            | "hipertrofia"
+                            | "geral",
+                        })
                   }
                   className="w-full p-2 border rounded"
                 >
@@ -351,22 +446,30 @@ function Home2() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Categoria</label>
+                <label className="block text-sm font-medium mb-1">
+                  Categoria
+                </label>
                 <select
-                  value={modoEdicao ? produtoEditando?.categoria?.id || "" : novoProduto.categoria?.id || ""}
+                  value={
+                    modoEdicao
+                      ? produtoEditando?.categoria?.id || ""
+                      : novoProduto.categoria?.id || ""
+                  }
                   onChange={(e) => {
                     const categoriaId = parseInt(e.target.value);
-                    const categoria = categorias.find(c => c.id === categoriaId);
+                    const categoria = categorias.find(
+                      (c) => c.id === categoriaId
+                    );
                     if (modoEdicao && categoria) {
-                      setProdutoEditando({...produtoEditando!, categoria});
+                      setProdutoEditando({ ...produtoEditando!, categoria });
                     } else if (categoria) {
-                      setNovoProduto({...novoProduto, categoria});
+                      setNovoProduto({ ...novoProduto, categoria });
                     }
                   }}
                   className="w-full p-2 border rounded"
                 >
                   <option value="">Selecione uma categoria</option>
-                  {categorias.map(categoria => (
+                  {categorias.map((categoria) => (
                     <option key={categoria.id} value={categoria.id}>
                       {categoria.nome}
                     </option>
@@ -403,25 +506,51 @@ function Home2() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Nome da Categoria</label>
+                <label className="block text-sm font-medium mb-1">
+                  Nome da Categoria
+                </label>
                 <input
                   type="text"
-                  value={modoEdicao ? categoriaEditando?.nome || "" : novaCategoria.nome || ""}
-                  onChange={(e) => modoEdicao
-                    ? setCategoriaEditando({...categoriaEditando!, nome: e.target.value})
-                    : setNovaCategoria({...novaCategoria, nome: e.target.value})
+                  value={
+                    modoEdicao
+                      ? categoriaEditando?.nome || ""
+                      : novaCategoria.nome || ""
+                  }
+                  onChange={(e) =>
+                    modoEdicao
+                      ? setCategoriaEditando({
+                          ...categoriaEditando!,
+                          nome: e.target.value,
+                        })
+                      : setNovaCategoria({
+                          ...novaCategoria,
+                          nome: e.target.value,
+                        })
                   }
                   className="w-full p-2 border rounded"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Descrição</label>
+                <label className="block text-sm font-medium mb-1">
+                  Descrição
+                </label>
                 <textarea
-                  value={modoEdicao ? categoriaEditando?.descricao || "" : novaCategoria.descricao || ""}
-                  onChange={(e) => modoEdicao
-                    ? setCategoriaEditando({...categoriaEditando!, descricao: e.target.value})
-                    : setNovaCategoria({...novaCategoria, descricao: e.target.value})
+                  value={
+                    modoEdicao
+                      ? categoriaEditando?.descricao || ""
+                      : novaCategoria.descricao || ""
+                  }
+                  onChange={(e) =>
+                    modoEdicao
+                      ? setCategoriaEditando({
+                          ...categoriaEditando!,
+                          descricao: e.target.value,
+                        })
+                      : setNovaCategoria({
+                          ...novaCategoria,
+                          descricao: e.target.value,
+                        })
                   }
                   className="w-full p-2 border rounded"
                   rows={3}
@@ -452,7 +581,10 @@ function Home2() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96">
             <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
-            <p className="mb-4">Tem certeza que deseja excluir o produto "{produtoParaExcluir.item}"?</p>
+            <p className="mb-4">
+              Tem certeza que deseja excluir o produto "
+              {produtoParaExcluir.item}"?
+            </p>
 
             <div className="flex justify-end space-x-3">
               <button
@@ -477,9 +609,13 @@ function Home2() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96">
             <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
-            <p className="mb-4">Tem certeza que deseja excluir a categoria "{categoriaParaExcluir.nome}"?</p>
+            <p className="mb-4">
+              Tem certeza que deseja excluir a categoria "
+              {categoriaParaExcluir.nome}"?
+            </p>
             <p className="text-sm text-red-500 mb-4">
-              Atenção: Esta ação não pode ser desfeita e pode afetar produtos associados.
+              Atenção: Esta ação não pode ser desfeita e pode afetar produtos
+              associados.
             </p>
 
             <div className="flex justify-end space-x-3">
