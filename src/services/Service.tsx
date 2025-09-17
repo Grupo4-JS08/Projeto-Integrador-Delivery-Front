@@ -6,7 +6,7 @@ import axios from "axios";
 
 // Configuração base da API
 const api = axios.create({
-  baseURL: "https://projeto-integrador-delivery.onrender.com", // URL do back-end NestJS
+ baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },

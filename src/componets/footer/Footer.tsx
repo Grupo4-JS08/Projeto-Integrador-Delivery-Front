@@ -14,7 +14,6 @@ const Footer: React.FC = () => {
         <div>
           <img src="/LogoDevLivery.png" alt="DevLivery Logo" className="w-60" />
           <a href="#">
-            <img src="" alt="" className="" />
           </a>
 
           <p className="text-xs mt-4">
