@@ -1,10 +1,28 @@
-import { useContext } from "react";
-import { FaShoppingCart, FaSearch } from "react-icons/fa";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { useContext, useState } from "react";
+import { FaShoppingCart } from "react-icons/fa";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
+import NavBarSearch from "./NavBarSearch";
+import type Produto from "../../models/Produto";
+
 
 function NavBar2() {
   const { usuario, handleLogout } = useContext(AuthContext);
+  const [searchResults, setSearchResults] = useState<Produto[]>([]);
+  const [searchObjective, setSearchObjective] = useState("");
+
+  const handleSearchResults = (produtos: Produto[], objetivo: string) => {
+    setSearchResults(produtos);
+    setSearchObjective(objetivo);
+
+    // Aqui você pode redirecionar para uma página de resultados ou exibir os resultados de outra forma
+    console.log(`Produtos encontrados para ${objetivo}:`, produtos);
+
+    // Exemplo: redirecionar para página de resultados
+    // window.location.href = `/produtos?objetivo=${objetivo}`;
+  };
 
   return (
     <div className="mt-2">
@@ -24,16 +42,16 @@ function NavBar2() {
           {/* Botão Olá Fulano ou Login */}
           {usuario && usuario.token ? (
             <>
-            <div className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow">
+              <div className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow">
                 Olá {usuario.nome}
               </div>
-            <button
-              onClick={handleLogout}
-              className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90"
-            >
-              Sair
-            </button></>
-
+              <button
+                onClick={handleLogout}
+                className="px-6 py-2 bg-[#FFF5DC] text-black rounded-full text-base font-semibold shadow hover:opacity-90"
+              >
+                Sair
+              </button>
+            </>
           ) : (
             <button
               onClick={() => (window.location.href = "/home")}
@@ -42,25 +60,13 @@ function NavBar2() {
               Login
             </button>
           )}
-          {/* Categorias */}
-          <span className="text-white font-semibold text-lg text-center flex-1">
-            Lanches Saudáveis · Marmitas Fit · Sucos
-          </span>
-          {/* Campo de pesquisa */}
-          <div className="relative flex-1 max-w-xs">
-            <input
-              type="text"
-              placeholder="Pesquisar..."
-              className="w-full pl-10 pr-4 py-2 rounded-full
-                         bg-white text-black
-                         focus:outline-none focus:ring-2 focus:ring-[#FF9800] focus:border-[#FF9800]"
-            />
-            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-          </div>
+
+          {/* Categorias substituída pelo campo de pesquisa por objetivo */}
+          <NavBarSearch onSearchResults={handleSearchResults} />
 
           <Link to="/carrinho">
             <FaShoppingCart className="text-white text-2xl cursor-pointer hover:scale-110 transition" />
-          </Link>{" "}
+          </Link>
         </div>
       </div>
     </div>
