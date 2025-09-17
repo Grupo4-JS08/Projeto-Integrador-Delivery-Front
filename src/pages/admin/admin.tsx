@@ -32,7 +32,6 @@ function Admin() {
     descricao: ''
   });
 
-  // Verificar se usuário é admin
   useEffect(() => {
     if (!usuario.token || !usuario.isMasterAdmin) {
       // Redirecionar para home se não for admin
