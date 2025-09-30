@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import type Produto from "../../models/Produto";
-import { buscarProdutosPorObjetivo } from "../../pages/produtos/services/ProdutoService";
+import { buscarProdutosPorObjetivo } from "../../services/ProdutoService";
 
 interface NavBarSearchProps {
   onSearchResults: (produtos: Produto[], objetivo: string) => void;
@@ -16,7 +15,7 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
   const objetivos = [
     { value: "hipertrofia", label: "Hipertrofia" },
     { value: "emagrecer", label: "Emagrecer" },
-    { value: "geral", label: "Geral" }
+    { value: "geral", label: "Geral" },
   ];
 
   const handleObjetivoSearch = async (objetivo: string) => {
@@ -40,7 +39,7 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
     setIsDropdownOpen(e.target.value.length > 0);
   };
 
-  const filteredObjetivos = objetivos.filter(objetivo =>
+  const filteredObjetivos = objetivos.filter((objetivo) =>
     objetivo.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -74,8 +73,12 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
               className="w-full px-4 py-3 text-left hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg
                        transition-colors duration-200"
             >
-              <div className="font-semibold text-gray-800">{objetivo.label}</div>
-              <div className="text-sm text-gray-500">Buscar produtos para {objetivo.label.toLowerCase()}</div>
+              <div className="font-semibold text-gray-800">
+                {objetivo.label}
+              </div>
+              <div className="text-sm text-gray-500">
+                Buscar produtos para {objetivo.label.toLowerCase()}
+              </div>
             </button>
           ))}
         </div>

@@ -1,4 +1,4 @@
-/* eslint-disable  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FaTrash, FaEdit, FaPlus, FaTag } from "react-icons/fa";
 import FooterInfo from "../../componets/footerinfo/FooterInfo";
 import { useEffect, useState } from "react";
@@ -9,37 +9,35 @@ import {
   criarCategoria,
   atualizarCategoria,
   deletarCategoria,
-} from "../categorias/services/CategoriaService";
+} from "../../services/CategoriaService";
 import {
   buscarProdutos,
   deletarProduto,
   atualizarProduto,
   criarProduto,
-} from "../produtos/services/ProdutoService";
+} from "../../services/ProdutoService";
 import NavBar2 from "../../componets/navbar/NavBar2";
 
 function Home2() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>("");
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
   const [produtosFiltrados, setProdutosFiltrados] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Estados para modais de produtos
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
-  const [novoProduto, setNovoProduto] = useState<Partial<Produto>>({
+  const [novoProduto, setNovoProduto] = useState({
     item: "",
     valor: 0,
     calorias: 0,
-    objetivo: "geral",
-    categoria: null,
+    objetivo: "geral" as "geral" | "emagrecer" | "hipertrofia",
+    categoria: null as Categoria | null,
   });
 
-  // Estados para modais de categorias
   const [categoriaEditando, setCategoriaEditando] = useState<Categoria | null>(
     null
   );
-  const [novaCategoria, setNovaCategoria] = useState<Partial<Categoria>>({
+  const [novaCategoria, setNovaCategoria] = useState({
     nome: "",
     descricao: "",
   });
@@ -86,7 +84,6 @@ function Home2() {
     }
   }, [categoriaSelecionada, produtos]);
 
-  // Funções CRUD para Produtos
   const handleEditarProduto = (produto: Produto) => {
     setProdutoEditando(produto);
     setModoEdicao(true);
@@ -107,7 +104,7 @@ function Home2() {
         );
         alert("Produto excluído com sucesso!");
       } catch (error) {
-        console.error("Erro ao excluir produto:", "error");
+        console.error("Erro ao excluir produto:", error);
         alert("Erro ao excluir produto");
       } finally {
         setProdutoParaExcluir(null);
@@ -144,7 +141,6 @@ function Home2() {
     }
   };
 
-  // Funções CRUD para Categorias
   const handleEditarCategoria = (categoria: Categoria) => {
     setCategoriaEditando(categoria);
     setModoEdicao(true);
@@ -196,10 +192,7 @@ function Home2() {
   };
 
   const handleNovaCategoria = () => {
-    setNovaCategoria({
-      nome: "",
-      descricao: "",
-    });
+    setNovaCategoria({ nome: "", descricao: "" });
     setModoEdicao(false);
     setMostrarModalCategoria(true);
   };
@@ -212,11 +205,10 @@ function Home2() {
     );
   }
 
-
   const ProductCard = ({ produto }: { produto: Produto }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
       <div className="flex justify-between p-4">
-        <div className=" w-1/2">
+        <div className="w-1/2">
           <h3 className="font-bold text-lg">{produto.item}</h3>
           <div className="flex items-center mb-2">
             <br />
@@ -279,7 +271,6 @@ function Home2() {
     <>
       <NavBar2 />
 
-      {/* Botões de ação */}
       <div className="container mx-auto mt-8 flex justify-end space-x-4">
         <button
           onClick={() => {
@@ -308,7 +299,6 @@ function Home2() {
         </button>
       </div>
 
-      {/* SEÇÃO PRINCIPAL DE PRODUTOS */}
       <section className="container mx-auto mt-12">
         <h2 className="text-2xl font-bold text-orange-500 mb-6">
           {categoriaSelecionada ? categoriaSelecionada : "Todos os Produtos"}
@@ -325,7 +315,6 @@ function Home2() {
         )}
       </section>
 
-      {/* Modal de Produto */}
       {mostrarModalProduto && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96 max-h-96 overflow-y-auto">
@@ -341,9 +330,7 @@ function Home2() {
                 <input
                   type="text"
                   value={
-                    modoEdicao
-                      ? produtoEditando?.item || ""
-                      : novoProduto.item || ""
+                    modoEdicao ? produtoEditando?.item || "" : novoProduto.item
                   }
                   onChange={(e) =>
                     modoEdicao
@@ -365,9 +352,7 @@ function Home2() {
                   type="number"
                   step="0.01"
                   value={
-                    modoEdicao
-                      ? produtoEditando?.valor || 0
-                      : novoProduto.valor || 0
+                    modoEdicao ? produtoEditando?.valor || 0 : novoProduto.valor
                   }
                   onChange={(e) =>
                     modoEdicao
@@ -393,7 +378,7 @@ function Home2() {
                   value={
                     modoEdicao
                       ? produtoEditando?.calorias || 0
-                      : novoProduto.calorias || 0
+                      : novoProduto.calorias
                   }
                   onChange={(e) =>
                     modoEdicao
@@ -418,7 +403,7 @@ function Home2() {
                   value={
                     modoEdicao
                       ? produtoEditando?.objetivo || "geral"
-                      : novoProduto.objetivo || "geral"
+                      : novoProduto.objetivo
                   }
                   onChange={(e) =>
                     modoEdicao
@@ -496,7 +481,6 @@ function Home2() {
         </div>
       )}
 
-      {/* Modal de Categoria */}
       {mostrarModalCategoria && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96">
@@ -514,7 +498,7 @@ function Home2() {
                   value={
                     modoEdicao
                       ? categoriaEditando?.nome || ""
-                      : novaCategoria.nome || ""
+                      : novaCategoria.nome
                   }
                   onChange={(e) =>
                     modoEdicao
@@ -539,7 +523,7 @@ function Home2() {
                   value={
                     modoEdicao
                       ? categoriaEditando?.descricao || ""
-                      : novaCategoria.descricao || ""
+                      : novaCategoria.descricao
                   }
                   onChange={(e) =>
                     modoEdicao
@@ -576,7 +560,6 @@ function Home2() {
         </div>
       )}
 
-      {/* Modal de Confirmação de Exclusão de Produto */}
       {produtoParaExcluir && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96">
@@ -585,7 +568,6 @@ function Home2() {
               Tem certeza que deseja excluir o produto "
               {produtoParaExcluir.item}"?
             </p>
-
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setProdutoParaExcluir(null)}
@@ -604,7 +586,6 @@ function Home2() {
         </div>
       )}
 
-      {/* Modal de Confirmação de Exclusão de Categoria */}
       {categoriaParaExcluir && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96">
@@ -617,7 +598,6 @@ function Home2() {
               Atenção: Esta ação não pode ser desfeita e pode afetar produtos
               associados.
             </p>
-
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setCategoriaParaExcluir(null)}

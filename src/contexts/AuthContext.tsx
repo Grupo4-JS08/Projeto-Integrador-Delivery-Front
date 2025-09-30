@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-// AuthContext.tsx (atualizado para garantir que isMasterAdmin seja tratado corretamente)
 import { createContext, useState, useEffect, type ReactNode } from "react";
 import { login } from "../services/Service";
 import type Usuario from "../models/Usuario";
@@ -22,13 +21,11 @@ export const AuthContext = createContext({} as AuthContextProps);
 export function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState<Usuario>(() => {
-    // Recupera dados do usuário do localStorage se disponível
     const usuarioSalvo = localStorage.getItem("usuario");
     if (usuarioSalvo) {
       const parsedUsuario = JSON.parse(usuarioSalvo);
       return {
         ...parsedUsuario,
-        // Garante que isMasterAdmin seja um booleano
         isMasterAdmin: Boolean(parsedUsuario.isMasterAdmin),
       };
     }
@@ -49,27 +46,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function handleLogin(usuarioLogin: UsuarioLogin) {
     setIsLoading(true);
     try {
-      // Mude para o endpoint CORRETO: "/usuarios/logar"
-      return await login(
-        "/usuarios/logar",
-        usuarioLogin,
-        (userData: Usuario) => {
-          const usuarioCompleto = {
-            ...userData,
-            isMasterAdmin: Boolean(userData.isMasterAdmin),
-          };
-          console.log("Dados do usuário após login:", usuarioCompleto);
-          setUsuario(usuarioCompleto);
-          setIsLoading(false);
+      return await login("/usuarios/logar", usuarioLogin, (userData: Usuario) => {
+        const usuarioCompleto = {
+          ...userData,
+          isMasterAdmin: Boolean(userData.isMasterAdmin),
+        };
+        setUsuario(usuarioCompleto);
+        setIsLoading(false);
 
-          if (usuarioCompleto.isMasterAdmin) {
-            navigate("/home2");
-          } else {
-            navigate("/home");
-          }
-          return usuarioCompleto;
+        if (usuarioCompleto.isMasterAdmin) {
+          navigate("/home2");
+        } else {
+          navigate("/home");
         }
-      );
+        return usuarioCompleto;
+      });
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       throw error;
@@ -89,10 +80,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
-    window.location.href = "/home"; // Redireciona para a página inicial após logout
+    window.location.href = "/home";
   }
 
-  // Salva dados do usuário no localStorage quando mudam
   useEffect(() => {
     if (usuario.token) {
       localStorage.setItem("usuario", JSON.stringify(usuario));
@@ -101,9 +91,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [usuario]);
 
   return (
-    <AuthContext.Provider
-      value={{ usuario, handleLogin, handleLogout, isLoading }}
-    >
+    <AuthContext.Provider value={{ usuario, handleLogin, handleLogout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

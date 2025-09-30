@@ -5,26 +5,29 @@ import { Link } from "react-router-dom";
 import ModalLogin from "../usuario/modallogin/ModalLogin";
 import ModalLogin2 from "../usuario/modallogin2/ModalLogin2";
 import ModalCadastro from "../usuario/modalcadastrar/ModalCadastrar";
+import ModalRecuperarSenha from "../usuario/Modalrecuperarsenha/ModalRecuperarSenha";
 import { AuthContext } from "../../contexts/AuthContext";
 
 function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isLogin2Open, setIsLogin2Open] = useState(false);
   const [isCadastroOpen, setIsCadastroOpen] = useState(false);
+  const [isRecuperarSenhaOpen, setIsRecuperarSenhaOpen] = useState(false);
   const { usuario, handleLogout } = useContext(AuthContext);
 
   const closeAllModals = () => {
     setIsLoginOpen(false);
     setIsLogin2Open(false);
     setIsCadastroOpen(false);
+    setIsRecuperarSenhaOpen(false);
   };
 
   // Scroll lock no <body> quando algum modal está aberto
   useEffect(() => {
-    const anyOpen = isLoginOpen || isLogin2Open || isCadastroOpen;
+    const anyOpen = isLoginOpen || isLogin2Open || isCadastroOpen || isRecuperarSenhaOpen;
     document.body.classList.toggle("overflow-hidden", anyOpen);
     return () => document.body.classList.remove("overflow-hidden");
-  }, [isLoginOpen, isLogin2Open, isCadastroOpen]);
+  }, [isLoginOpen, isLogin2Open, isCadastroOpen, isRecuperarSenhaOpen]);
 
   // Fechar com ESC
   useEffect(() => {
@@ -54,6 +57,12 @@ function Navbar() {
   };
   const handleCloseCadastro = () => setIsCadastroOpen(false);
 
+  const handleOpenRecuperarSenha = () => {
+    closeAllModals();
+    setIsRecuperarSenhaOpen(true);
+  };
+  const handleCloseRecuperarSenha = () => setIsRecuperarSenhaOpen(false);
+
   // Fluxos a partir do ModalLogin (passo 1)
   const handleGoToLogin2 = () => {
     setIsLoginOpen(false);
@@ -63,6 +72,24 @@ function Navbar() {
   const handleGoToCadastro = () => {
     setIsLoginOpen(false);
     setIsCadastroOpen(true);
+  };
+
+  // Fluxo do ModalLogin2 para ModalCadastro
+  const handleGoToCadastroFromLogin2 = () => {
+    setIsLogin2Open(false);
+    setIsCadastroOpen(true);
+  };
+
+  // Fluxo do ModalLogin2 para Recuperar Senha
+  const handleGoToRecuperarSenhaFromLogin2 = () => {
+    setIsLogin2Open(false);
+    setIsRecuperarSenhaOpen(true);
+  };
+
+  // Fluxo do Recuperar Senha para Login2
+  const handleBackToLoginFromRecuperarSenha = () => {
+    setIsRecuperarSenhaOpen(false);
+    setIsLogin2Open(true);
   };
 
   const handleLogoutClick = () => {
@@ -127,10 +154,11 @@ function Navbar() {
             )}
             <Link to="/carrinho">
               <FaShoppingCart className="text-orange text-2xl cursor-pointer hover:opacity-70 transition " />
-            </Link>{" "}
+            </Link>
           </div>
         </div>
       </nav>
+
       {/* ModalLogin (passo 1) */}
       <ModalLogin
         isOpen={isLoginOpen}
@@ -138,14 +166,31 @@ function Navbar() {
         onLoginClick={handleGoToLogin2}
         onRegisterClick={handleGoToCadastro}
         onAdminLoginClick={handleOpenLogin2}
+        onForgotPasswordClick={handleOpenRecuperarSenha}
       />
+
       {/* ModalLogin2 (form de login) */}
-      {isLogin2Open && <ModalLogin2 onClose={handleCloseLogin2} />}
+      {isLogin2Open && (
+        <ModalLogin2
+          onClose={handleCloseLogin2}
+          onRegisterClick={handleGoToCadastroFromLogin2}
+          onForgotPasswordClick={handleGoToRecuperarSenhaFromLogin2}
+        />
+      )}
+
       {/* ModalCadastro */}
       {isCadastroOpen && (
         <ModalCadastro
           onClose={handleCloseCadastro}
-          onOpenLogin={handleOpenLogin} // Adicione esta linha
+          onOpenLogin={handleOpenLogin2}
+        />
+      )}
+
+      {/* ModalRecuperarSenha */}
+      {isRecuperarSenhaOpen && (
+        <ModalRecuperarSenha
+          onClose={handleCloseRecuperarSenha}
+          onBackToLogin={handleBackToLoginFromRecuperarSenha}
         />
       )}
     </>

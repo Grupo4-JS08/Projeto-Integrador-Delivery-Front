@@ -6,15 +6,14 @@ import type Produto from '../../models/Produto';
 function Produtos() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
 
-  async function listarProdutos() {
-    try {
-      await buscar('/produtos', setProdutos);
-    } catch (error) {
-      console.error('Erro ao listar produtos:', error);
-    }
-  }
-
   useEffect(() => {
+    async function listarProdutos() {
+      try {
+        await buscar('/produtos', setProdutos);
+      } catch (error) {
+        console.error('Erro ao listar produtos:', error);
+      }
+    }
     listarProdutos();
   }, []);
 

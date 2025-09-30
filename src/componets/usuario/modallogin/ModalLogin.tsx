@@ -1,4 +1,3 @@
-// src/components/modal/ModalLogin.tsx
 import React, { useEffect, useRef } from "react";
 import { FaUser, FaUserPlus, FaUserShield } from "react-icons/fa";
 
@@ -13,6 +12,8 @@ export type ModalLoginProps = {
   onRegisterClick: () => void;
   /** abre o ModalLogin2 em modo admin */
   onAdminLoginClick: () => void;
+  /** abre o Modal de Recuperação de Senha */
+  onForgotPasswordClick: () => void;
 };
 
 const ModalLogin: React.FC<ModalLoginProps> = ({
@@ -21,6 +22,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
   onLoginClick,
   onRegisterClick,
   onAdminLoginClick,
+  onForgotPasswordClick,
 }) => {
   const dialogRef = useRef<HTMLDivElement | null>(null);
 
@@ -34,7 +36,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
     return () => window.removeEventListener("keydown", handleKey);
   }, [isOpen, onClose]);
 
-  // Fecha clicando fora do card 
+  // Fecha clicando fora do card
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
   };
@@ -64,11 +66,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
 
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img
-            src="/LogoDevLivery.png"
-            alt="DevLivery Logo"
-            className="w-60"
-          />
+          <img src="/LogoDevLivery.png" alt="DevLivery Logo" className="w-60" />
         </div>
 
         {/* Título */}
@@ -86,7 +84,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
           Login
         </button>
 
-             {/* Botão Login Admin */}
+        {/* Botão Login Admin */}
         <button
           type="button"
           onClick={onAdminLoginClick}
@@ -112,15 +110,12 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
             type="button"
             className="text-sm text-[#1E1E1E] underline hover:text-orange-600"
             onClick={() => {
-              // aqui você pode acionar um fluxo de recuperação de senha
-              // ex.: navegar para "/recuperar-senha" ou abrir outro modal
-              // navigate("/recuperar-senha");
+              onClose();
+              onForgotPasswordClick();
             }}
           >
             Esqueci a senha
           </button>
-
-
         </div>
       </div>
     </div>
