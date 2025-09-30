@@ -1,31 +1,16 @@
-// pages/carrinho/Carrinho.tsx
 import { useContext, useMemo, useState } from "react";
 import { CarrinhoContext } from "../../contexts/CarrinhoContext";
-import {
-  X,
-  ShoppingCart,
-  Store,
-  Truck,
-  Plus,
-  Trash2,
-  Minus,
-  Tag,
-} from "lucide-react";
+import { ShoppingCart, Truck, Store, Plus, Minus, X, Tag } from "lucide-react";
 
 const DELIVERY_FEE = 9.9;
 
 export default function Carrinho() {
-  const { itens, alterarQuantidade, remover, carregando } =
-    useContext(CarrinhoContext);
+  const { itens, alterarQuantidade, remover, carregando } = useContext(CarrinhoContext);
   const [cupom, setCupom] = useState("");
   const [cupomAplicado, setCupomAplicado] = useState<string | null>(null);
 
   const subtotal = useMemo(
-    () =>
-      itens.reduce(
-        (acc, item) => acc + item.produto.valor * item.quantidade,
-        0
-      ),
+    () => itens.reduce((acc, item) => acc + item.produto.valor * item.quantidade, 0),
     [itens]
   );
 
@@ -39,18 +24,20 @@ export default function Carrinho() {
   const total = Math.max(0, subtotal - desconto + DELIVERY_FEE);
 
   function aumentarQuantidade(id: number) {
-    alterarQuantidade(
-      id,
-      itens.find((item) => item.produto.id === id)!.quantidade + 1
-    );
+    const item = itens.find(item => item.produto.id === id);
+    if (item) {
+      alterarQuantidade(id, item.quantidade + 1);
+    }
   }
 
   function diminuirQuantidade(id: number) {
-    const item = itens.find((item) => item.produto.id === id);
-    if (item && item.quantidade > 1) {
-      alterarQuantidade(id, item.quantidade - 1);
-    } else {
-      remover(id);
+    const item = itens.find(item => item.produto.id === id);
+    if (item) {
+      if (item.quantidade > 1) {
+        alterarQuantidade(id, item.quantidade - 1);
+      } else {
+        remover(id);
+      }
     }
   }
 
@@ -69,22 +56,17 @@ export default function Carrinho() {
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-6">
-        {/* ESQUERDA - LISTA DE ITENS */}
         <section>
-          <h1 className="text-lg font-semibold text-gray-900 mb-4">
-            Descrição do pedido
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-900 mb-4">Descrição do pedido</h1>
 
           <div className="space-y-4">
             {itens.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">
-                Seu carrinho está vazio
-              </p>
+              <p className="text-center text-gray-500 py-8">Seu carrinho está vazio</p>
             ) : (
               itens.map((item) => (
                 <div
                   key={item.produto.id}
-                  className="rounded-xl border shadow-sm flex items-center gap-4 pl-4 pr-3 bg-amber-50/60 border-amber-100 text-gray-900"
+                  className="rounded-xl border shadow-sm flex items-center gap-4 pl-4 pr-3 bg-amber-50/60 border-amber-100"
                 >
                   <img
                     src={item.produto.categoria?.foto || "/lanche01.jpg"}
@@ -96,12 +78,8 @@ export default function Carrinho() {
                     <div className="flex items-center gap-4 w-full min-w-0 py-4">
                       <div className="h-5 w-[1px] bg-gray-400/40" />
                       <div className="flex-1 min-w-0">
-                        <div className="truncate font-semibold">
-                          {item.produto.item}
-                        </div>
-                        <div className="mt-1 text-sm text-gray-500">
-                          R$ {item.produto.valor.toFixed(2)}
-                        </div>
+                        <div className="truncate font-semibold">{item.produto.item}</div>
+                        <div className="mt-1 text-sm text-gray-500">R$ {item.produto.valor.toFixed(2)}</div>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -110,11 +88,7 @@ export default function Carrinho() {
                           className="grid place-items-center rounded-full h-8 w-8 bg-white"
                           aria-label="Diminuir"
                         >
-                          <Minus
-                            size={18}
-                            className="text-gray-900"
-                            height="bold"
-                          />
+                          <Minus size={18} className="text-gray-900" />
                         </button>
 
                         <span className="inline-flex items-center justify-center h-10 w-10 rounded-lg text-sm font-bold bg-white text-gray-900">
@@ -126,20 +100,15 @@ export default function Carrinho() {
                           className="grid place-items-center rounded-full h-8 w-8 bg-white"
                           aria-label="Aumentar"
                         >
-                          <Plus
-                            size={18}
-                            className="text-gray-900"
-                            height="bold"
-                          />
+                          <Plus size={18} className="text-gray-900" />
                         </button>
 
                         <button
                           onClick={() => remover(item.produto.id)}
                           className="ml-2 grid place-items-center rounded-full h-8 w-8 bg-white"
                           aria-label="Remover"
-                          title="Remover"
                         >
-                          <Trash2 size={18} className="text-gray-900" />
+                          <X size={18} className="text-gray-900" />
                         </button>
                       </div>
                     </div>
@@ -150,24 +119,18 @@ export default function Carrinho() {
           </div>
         </section>
 
-        {/* DIREITA - RESUMO DO CARRINHO */}
         <aside className="self-start rounded-xl border shadow-sm overflow-hidden">
           <div className="flex items-center gap-2 bg-[#6B865B] text-white px-4 py-3">
-            <ShoppingCart size={22} height="bold" />
+            <ShoppingCart size={22} />
             <h2 className="font-semibold">Carrinho</h2>
           </div>
 
           <div className="divide-y">
             {itens.length === 0 ? (
-              <p className="text-center text-gray-500 p-4">
-                Seu carrinho está vazio
-              </p>
+              <p className="text-center text-gray-500 p-4">Seu carrinho está vazio</p>
             ) : (
               itens.map((item) => (
-                <div
-                  key={item.produto.id}
-                  className="flex items-start gap-3 px-4 py-3"
-                >
+                <div key={item.produto.id} className="flex items-start gap-3 px-4 py-3">
                   <div className="relative">
                     <img
                       src={item.produto.categoria?.foto || "/lanche01.jpg"}
@@ -183,23 +146,18 @@ export default function Carrinho() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="truncate font-semibold text-sm">
-                        {item.produto.item}
-                      </div>
+                      <div className="truncate font-semibold text-sm">{item.produto.item}</div>
                       <div className="text-sm font-medium text-gray-700">
                         R$ {(item.produto.valor * item.quantidade).toFixed(2)}
                       </div>
                     </div>
-                    <div className="text-[12px] text-gray-500">
-                      {item.produto.calorias} calorias
-                    </div>
+                    <div className="text-[12px] text-gray-500">{item.produto.calorias} calorias</div>
                   </div>
 
                   <button
                     className="ml-1 text-gray-400 hover:text-rose-600"
                     onClick={() => remover(item.produto.id)}
                     aria-label={`Remover ${item.produto.item}`}
-                    title="Remover"
                   >
                     <X size={16} />
                   </button>
@@ -211,28 +169,19 @@ export default function Carrinho() {
           <div className="px-4 py-3 space-y-2 bg-amber-50/50">
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Sub Total:</span>
-              <span className="font-semibold text-gray-800">
-                R$ {subtotal.toFixed(2)}
-              </span>
+              <span className="font-semibold text-gray-800">R$ {subtotal.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Desconto:</span>
-              <span className="font-semibold text-rose-600">
-                - R$ {desconto.toFixed(2)}
-              </span>
+              <span className="font-semibold text-rose-600">- R$ {desconto.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Taxa de Entrega:</span>
-              <span className="font-semibold text-gray-800">
-                R$ {DELIVERY_FEE.toFixed(2)}
-              </span>
+              <span className="font-semibold text-gray-800">R$ {DELIVERY_FEE.toFixed(2)}</span>
             </div>
 
             <div className="mt-2">
-              <button
-                className="w-full inline-flex items-center justify-between bg-orange-500 text-white font-bold rounded-lg px-4 py-3 shadow hover:bg-orange-600"
-                title="Valor total"
-              >
+              <button className="w-full inline-flex items-center justify-between bg-orange-500 text-white font-bold rounded-lg px-4 py-3 shadow hover:bg-orange-600">
                 <span>Valor total</span>
                 <span className="text-lg">R$ {total.toFixed(2)}</span>
               </button>
@@ -241,10 +190,7 @@ export default function Carrinho() {
             <div className="mt-3">
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
-                  <Tag
-                    size={16}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  />
+                  <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Cupom de desconto"
@@ -283,7 +229,9 @@ export default function Carrinho() {
 
           <div className="px-4 py-4 bg-amber-50/50">
             <button
-              className={`w-full inline-flex items-center justify-center gap-2 bg-[#6B865B] text-white font-semibold rounded-lg px-4 py-3 hover:bg-[#5e764e] ${itens.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`w-full inline-flex items-center justify-center gap-2 bg-[#6B865B] text-white font-semibold rounded-lg px-4 py-3 hover:bg-[#5e764e] ${
+                itens.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               disabled={itens.length === 0}
             >
               <ShoppingCart size={18} />

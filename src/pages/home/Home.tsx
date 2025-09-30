@@ -1,20 +1,25 @@
-/* eslint-disable */
 import { useContext, useEffect, useState } from "react";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import FooterInfo from "../../componets/footerinfo/FooterInfo";
 import type Produto from "../../models/Produto";
 import type Categoria from "../../models/Categoria";
-import { buscarCategorias } from "../categorias/services/CategoriaService";
-import { buscarProdutos, buscarProdutosPorObjetivo } from "../produtos/services/ProdutoService";
+import { buscarCategorias } from "../../services/CategoriaService";
+import {
+  buscarProdutos,
+  buscarProdutosPorObjetivo,
+} from "../../services/ProdutoService";
 import Avaliacoes from "../../componets/avaliacoes/Avaliacoes";
 import { CarrinhoContext } from "../../contexts/CarrinhoContext";
-import { AuthContext } from "../../contexts/AuthContext";
-import { Link } from "react-router-dom";
 
-const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id: number) => void }) => (
+const ProductCard = ({
+  produto,
+  adicionar,
+}: {
+  produto: Produto;
+  adicionar: (id: number) => void;
+}) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
     <div className="flex justify-between p-4 h-full">
-      {/* Bloco esquerdo (infos + botão) */}
       <div className="flex-1 flex flex-col justify-between">
         <div>
           <h3 className="font-bold text-lg">{produto.item}</h3>
@@ -24,7 +29,6 @@ const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id:
           <span className="font-bold text-gray-900 mt-2 block">
             R$ {produto.valor.toFixed(2)}
           </span>
-
           <span className="text-xs text-gray-500">
             {produto.calorias} calorias
           </span>
@@ -34,15 +38,13 @@ const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id:
               produto.objetivo === "emagrecer"
                 ? "text-green-600"
                 : produto.objetivo === "hipertrofia"
-                ? "text-blue-600"
-                : "text-orange-600"
+                  ? "text-blue-600"
+                  : "text-orange-600"
             }`}
           >
             {produto.objetivo}
           </span>
         </div>
-
-        {/* Botão sempre embaixo */}
         <button
           onClick={() => adicionar(produto.id)}
           className="mt-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm hover:bg-orange-600 transition w-fit cursor-pointer"
@@ -50,8 +52,6 @@ const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id:
           <FaShoppingCart className="inline mr-1" /> Adicionar
         </button>
       </div>
-
-      {/* Imagem na direita */}
       <div className="relative ml-4 flex items-center">
         <img
           src={produto.categoria?.foto || "/lanche01.jpg"}
@@ -63,11 +63,11 @@ const ProductCard = ({ produto, adicionar }: { produto: Produto, adicionar: (id:
   </div>
 );
 
-interface NavBarSearchProps {
+function NavBarSearch({
+  onSearchResults,
+}: {
   onSearchResults: (produtos: Produto[], objetivo: string) => void;
-}
-
-function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -97,17 +97,6 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setIsDropdownOpen(true); // abre mesmo digitando 1 letra
-  };
-
-  const handleFocus = () => setIsDropdownOpen(true);
-  const handleBlur = () => {
-    // pequeno delay para permitir o clique no item do menu
-    setTimeout(() => setIsDropdownOpen(false), 150);
-  };
-
   const filteredObjetivos =
     searchTerm.trim() === ""
       ? objetivos
@@ -122,15 +111,12 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
           type="text"
           placeholder="Buscar por objetivo..."
           value={searchTerm}
-          onChange={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          className="w-full pl-10 pr-4 py-2 rounded-full
-                   bg-[#FFF5DC] text-black
-                   focus:outline-none focus:ring-2 focus:ring-[#FF9800] focus:border-[#FF9800]"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onFocus={() => setIsDropdownOpen(true)}
+          onBlur={() => setTimeout(() => setIsDropdownOpen(false), 150)}
+          className="w-full pl-10 pr-4 py-2 rounded-full bg-[#FFF5DC] text-black focus:outline-none focus:ring-2 focus:ring-[#FF9800]"
         />
         <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-
         {isLoading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#7E8C54]"></div>
@@ -143,10 +129,12 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
           {filteredObjetivos.map((objetivo) => (
             <button
               key={objetivo.value}
-              onMouseDown={() => handleObjetivoSearch(objetivo.value)} // onMouseDown evita perder foco antes do clique
+              onMouseDown={() => handleObjetivoSearch(objetivo.value)}
               className="w-full px-4 py-3 text-left hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg transition-colors duration-200"
             >
-              <div className="font-semibold text-gray-800">{objetivo.label}</div>
+              <div className="font-semibold text-gray-800">
+                {objetivo.label}
+              </div>
               <div className="text-sm text-gray-500">
                 Buscar produtos para {objetivo.label.toLowerCase()}
               </div>
@@ -158,36 +146,15 @@ function NavBarSearch({ onSearchResults }: NavBarSearchProps) {
   );
 }
 
-function NavBar2({
-  onSearchResults,
+function SearchResults({
+  produtos,
+  objetivo,
+  adicionar,
 }: {
-  onSearchResults: (produtos: Produto[], objetivo: string) => void;
-}) {
-
-  return (
-    <div className="mt-2">
-      {/* Removido overflow-hidden e adicionado relative */}
-      <div className="relative flex items-stretch container mx-auto rounded-lg">
-        {/* Bloco do logo */}
-
-
-        {/* Bloco verde da navbar */}
-        <div className=" flex items-center justify-between flex-1 px-8 gap-6">
-          <NavBarSearch onSearchResults={onSearchResults} />
-
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface SearchResultsProps {
   produtos: Produto[];
   objetivo: string;
   adicionar: (id: number) => void;
-}
-
-function SearchResults({ produtos, objetivo, adicionar }: SearchResultsProps) {
+}) {
   if (!objetivo) return null;
 
   return (
@@ -195,7 +162,6 @@ function SearchResults({ produtos, objetivo, adicionar }: SearchResultsProps) {
       <h2 className="text-2xl font-bold text-orange-500 mb-6">
         Resultados para: {objetivo.charAt(0).toUpperCase() + objetivo.slice(1)}
       </h2>
-
       {produtos.length === 0 ? (
         <p className="text-center text-gray-500 py-8">
           Nenhum produto encontrado para este objetivo.
@@ -218,7 +184,7 @@ function SearchResults({ produtos, objetivo, adicionar }: SearchResultsProps) {
 function Home() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>("");
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
   const [produtosFiltrados, setProdutosFiltrados] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState<Produto[]>([]);
@@ -229,12 +195,10 @@ function Home() {
     async function fetchData() {
       try {
         setLoading(true);
-
         const [categoriasData, produtosData] = await Promise.all([
           buscarCategorias(),
           buscarProdutos(),
         ]);
-
         setCategorias(categoriasData);
         setProdutos(produtosData);
         setProdutosFiltrados(produtosData);
@@ -244,7 +208,6 @@ function Home() {
         setLoading(false);
       }
     }
-
     fetchData();
   }, []);
 
@@ -267,27 +230,6 @@ function Home() {
     setCategoriaSelecionada("");
   };
 
-  // Componente de card grande (mantido dentro de Home pois só é usado aqui)
-  const ProductCardLarge = ({ produto }: { produto: Produto }) => (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer">
-      <img
-        src={produto.categoria?.foto || "/saudavel02.jpg"}
-        alt={produto.item}
-        className="w-full h-50 object-cover"
-      />
-      <div className="p-4">
-        <h3 className="font-bold text-lg">{produto.item}</h3>
-        <p className="text-sm text-gray-600">
-          {produto.categoria?.descricao || "Descrição não disponível"}
-        </p>
-        <span className="font-bold text-gray-900 mt-2 block">
-          R$ {produto.valor.toFixed(2)}
-        </span>
-      </div>
-    </div>
-  );
-
-  // Filtra produtos por categoria específica (para as seções)
   const getProdutosPorCategoria = (nomeCategoria: string) => {
     return produtos.filter(
       (produto) =>
@@ -305,9 +247,14 @@ function Home() {
 
   return (
     <>
-      <NavBar2 onSearchResults={handleSearchResults} />
+      <div className="mt-2">
+        <div className="relative flex items-stretch container mx-auto rounded-lg">
+          <div className="flex items-center justify-between flex-1 px-8 gap-6">
+            <NavBarSearch onSearchResults={handleSearchResults} />
+          </div>
+        </div>
+      </div>
 
-      {/* Exibe resultados da pesquisa se houver */}
       {searchObjective && (
         <SearchResults
           produtos={searchResults}
@@ -316,34 +263,23 @@ function Home() {
         />
       )}
 
-      {/* Conteúdo principal apenas se não houver pesquisa ativa */}
       {!searchObjective && (
         <>
           <div className="w-full">
-            {/* BANNER */}
             <section className="container mx-auto mt-6">
               <div className="relative overflow-hidden rounded-xl shadow-md text-white">
-                {/* imagem de fundo */}
                 <img
                   src="https://i.pinimg.com/1200x/4c/d8/c4/4cd8c4493efc8e4d6bc9992a25521d85.jpg"
                   alt="Fundo"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-
-                {/* tinta verde por cima da imagem */}
                 <div className="absolute inset-0 bg-[#7E8C54]/60" />
-
-                {/* gradiente escuro da esquerda p/ direita p/ dar contraste ao título */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />
-
-                {/* conteúdo */}
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 p-6">
-                  {/* texto */}
                   <div>
                     <h2 className="text-4xl md:text-5xl font-extrabold text-orange-500 leading-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.65)]">
                       Mais pedido
                     </h2>
-
                     <div className="mt-4 flex flex-wrap gap-3">
                       <button className="px-4 py-2 bg-white text-gray-900 rounded-full text-sm shadow hover:opacity-90">
                         Receba nossas novidades
@@ -353,8 +289,6 @@ function Home() {
                       </button>
                     </div>
                   </div>
-
-                  {/* imagem do prato (opcional) */}
                   <img
                     src="https://i.pinimg.com/1200x/4c/d8/c4/4cd8c4493efc8e4d6bc9992a25521d85.jpg"
                     alt="Prato"
@@ -365,88 +299,63 @@ function Home() {
             </section>
           </div>
 
-          {/* SEÇÃO CARDS DE PROMOÇÕES */}
           <section className="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1 */}
-            <a
-              href="/promocoes"
-              className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
-            >
-              <img
-                src="/saudavel02.jpg"
-                alt="Mais promoções"
-                className="w-full h-56 object-cover"
-              />
-              {/* gradient escuro no fundo */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-              {/* caixinha opaca atrás do texto */}
-              <div className="absolute bottom-3 left-3 right-3">
-                <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
-                  <span className="block text-xs">
-                    Aproveite nossas promoções parceiras
-                  </span>
-                  <h3 className="mt-0.5 font-bold text-lg leading-tight">
-                    Mais promoções
-                  </h3>
+            {[
+              {
+                href: "/promocoes",
+                img: "/saudavel02.jpg",
+                title: "Mais promoções",
+                discount: "-20%",
+              },
+              {
+                href: "/vegan",
+                img: "/lanche01.jpg",
+                title: "Comidas veganas",
+                discount: "-30%",
+              },
+              {
+                href: "/detox",
+                img: "https://i.pinimg.com/736x/1e/3b/42/1e3b4299531ae69bf823a58d850038d7.jpg",
+                title: "Linha Detox",
+                discount: "-10%",
+              },
+            ].map((card, index) => (
+              <a
+                key={index}
+                href={card.href}
+                className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
+              >
+                <img
+                  src={card.img}
+                  alt={card.title}
+                  className="w-full h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3">
+                  <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
+                    <span className="block text-xs">
+                      {index === 0
+                        ? "Aproveite nossas promoções parceiras"
+                        : index === 1
+                          ? "Aqui você encontra"
+                          : "Sempre o melhor para você"}
+                    </span>
+                    <h3 className="mt-0.5 font-bold text-lg leading-tight">
+                      {card.title}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
-                -20%
-              </span>
-            </a>
-
-            {/* Card 2 */}
-            <a
-              href="/vegan"
-              className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
-            >
-              <img
-                src="/lanche01.jpg"
-                alt="Comidas veganas"
-                className="w-full h-56 object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-              <div className="absolute bottom-3 left-3 right-3">
-                <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
-                  <span className="block text-xs">Aqui você encontra</span>
-                  <h3 className="mt-0.5 font-bold text-lg leading-tight">
-                    Comidas veganas
-                  </h3>
-                </div>
-              </div>
-              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
-                -30%
-              </span>
-            </a>
-
-            {/* Card 3 */}
-            <a
-              href="/detox"
-              className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
-            >
-              <img
-                src="https://i.pinimg.com/736x/1e/3b/42/1e3b4299531ae69bf823a58d850038d7.jpg"
-                alt="Linha Detox"
-                className="w-full h-56 object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-              <div className="absolute bottom-3 left-3 right-3">
-                <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
-                  <span className="block text-xs">Sempre o melhor para você</span>
-                  <h3 className="mt-0.5 font-bold text-lg leading-tight">
-                    Conheça nossa linha Detox
-                  </h3>
-                </div>
-              </div>
-              <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
-                -10%
-              </span>
-            </a>
+                <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
+                  {card.discount}
+                </span>
+              </a>
+            ))}
           </section>
 
-          {/* Filtros de Categorias */}
           <section className="container mx-auto mt-12">
-            <h2 className="text-2xl font-bold text-orange-500 mb-4">Categorias</h2>
+            <h2 className="text-2xl font-bold text-orange-500 mb-4">
+              Categorias
+            </h2>
             <div className="flex flex-wrap gap-2 mb-6">
               <button
                 onClick={() => setCategoriaSelecionada("")}
@@ -474,14 +383,16 @@ function Home() {
             </div>
           </section>
 
-          {/* SEÇÃO PRINCIPAL DE PRODUTOS */}
           <section className="container mx-auto mt-6">
             <h2 className="text-2xl font-bold text-orange-500 mb-6">
-              {categoriaSelecionada ? categoriaSelecionada : "Todos os Produtos"}
+              {categoriaSelecionada
+                ? categoriaSelecionada
+                : "Todos os Produtos"}
             </h2>
-
             {produtosFiltrados.length === 0 ? (
-              <p className="text-center text-gray-500">Nenhum produto encontrado</p>
+              <p className="text-center text-gray-500">
+                Nenhum produto encontrado
+              </p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {produtosFiltrados.map((produto) => (
@@ -495,13 +406,10 @@ function Home() {
             )}
           </section>
 
-          {/* SEÇÕES ESPECÍFICAS POR CATEGORIA */}
           {categorias.map((categoria) => {
-            const produtosCategoria = getProdutosPorCategoria(categoria.nome).slice(
-              0,
-              4
-            );
-
+            const produtosCategoria = getProdutosPorCategoria(
+              categoria.nome
+            ).slice(0, 4);
             if (produtosCategoria.length === 0) return null;
 
             return (
@@ -510,7 +418,6 @@ function Home() {
                   {categoria.nome}
                 </h2>
                 <p className="text-gray-600 mb-4">{categoria.descricao}</p>
-
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                   {produtosCategoria.map((produto) => (
                     <ProductCard

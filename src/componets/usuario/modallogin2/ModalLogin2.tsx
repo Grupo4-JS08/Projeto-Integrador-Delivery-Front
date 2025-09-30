@@ -1,27 +1,30 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {
   useContext,
   useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
-  useCallback,
 } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { PulseLoader } from "react-spinners";
 import { IoMdClose } from "react-icons/io";
 import { AiOutlineMail } from "react-icons/ai";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 interface ModalLogin2Props {
   onClose: () => void;
+  onRegisterClick: () => void;
+  onForgotPasswordClick: () => void; // Nova prop para recuperação de senha
 }
 
-function ModalLogin2({ onClose }: ModalLogin2Props) {
-  const { usuario, handleLogin } = useContext(AuthContext);
-  const navigate = useNavigate();
+function ModalLogin2({
+  onClose,
+  onRegisterClick,
+  onForgotPasswordClick,
+}: ModalLogin2Props) {
+  const { handleLogin } = useContext(AuthContext);
 
   const [usuarioLogin, setUsuarioLogin] = useState({
     usuario: "",
@@ -35,7 +38,6 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setUsuarioLogin((prev) => ({ ...prev, [name]: value }));
-    // Limpa o erro quando o usuário começa a digitar
     if (loginError) {
       setLoginError(null);
     }
@@ -47,24 +49,19 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
     setLoginError(null);
 
     try {
-      await handleLogin(usuarioLogin).then((usuario: any) => {
-        setIsSubmitting(false);
-        console.log("Usuário logado com sucesso:", usuario);
-        onClose();
-      });
+      await handleLogin(usuarioLogin);
+      setIsSubmitting(false);
+      onClose();
     } catch (error: any) {
-      // Captura o erro específico do backend
       const errorMessage =
         error?.response?.data?.message ||
         error?.response?.data ||
         "Usuário ou senha incorretos. Verifique suas credenciais.";
       setLoginError(errorMessage);
       setIsSubmitting(false);
-      console.error("Erro ao fazer login:", error);
     }
   }
 
-  // Fecha com tecla ESC
   useEffect(() => {
     const onKey = (ev: KeyboardEvent) => {
       if (ev.key === "Escape") onClose();
@@ -73,28 +70,16 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // Fecha ao clicar no backdrop
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) onClose();
-    },
-    [onClose]
-  );
-
-  // Limpa o erro quando o modal é fechado
-  useEffect(() => {
-    return () => {
-      setLoginError(null);
-    };
-  }, []);
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) onClose();
+  };
 
   return (
     <div
-      className="fixed inset-0 z-[140] flex items-center bg-black/50 justify-center bg-opacity-60"
+      className="fixed inset-0 z-[140] flex items-center bg-black/50 justify-center"
       onMouseDown={handleBackdropClick}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-login2-title"
     >
       <div className="bg-white rounded-xl p-8 w-full max-w-md relative text-center shadow-lg">
         <button
@@ -113,56 +98,53 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
           />
         </div>
 
-        <h2
-          id="modal-login2-title"
-          className="text-[#f79009] font-bold text-lg mb-4"
-        >
+        <h2 className="text-[#f79009] font-bold text-lg mb-4">
           Bem-vindo de volta
         </h2>
 
         <form onSubmit={login} className="space-y-4 text-left">
           <div className="relative">
-            <input
-              type="email"
-              name="usuario"
-              placeholder="Email"
-              value={usuarioLogin.usuario}
-              onChange={atualizarEstado}
-              className="w-full px-4 py-2 pr-10 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
-              required
-              disabled={isSubmitting}
-            />
-            <AiOutlineMail
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 pointer-events-none"
-              aria-hidden
-            />
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <div className="relative">
+              <input
+                type="email"
+                name="usuario"
+                placeholder="seu.email@exemplo.com"
+                value={usuarioLogin.usuario}
+                onChange={atualizarEstado}
+                className="w-full px-10 py-2 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
+                required
+                disabled={isSubmitting}
+              />
+              <AiOutlineMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700" />
+            </div>
           </div>
 
           <div className="relative">
-            <input
-              type={mostrarSenha ? "text" : "password"}
-              name="senha"
-              placeholder="Senha"
-              value={usuarioLogin.senha}
-              onChange={atualizarEstado}
-              className="w-full px-4 py-2 pr-10 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
-              required
-              minLength={6}
-              disabled={isSubmitting}
-            />
-            <button
-              type="button"
-              onClick={() => setMostrarSenha((v) => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700"
-              aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
-              aria-pressed={mostrarSenha}
-              disabled={isSubmitting}
-            >
-              {mostrarSenha ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            <label className="block text-sm font-medium mb-1">Senha</label>
+            <div className="relative">
+              <input
+                type={mostrarSenha ? "text" : "password"}
+                name="senha"
+                placeholder="Digite sua senha"
+                value={usuarioLogin.senha}
+                onChange={atualizarEstado}
+                className="w-full px-10 py-2 bg-[#c8cfac] text-sm rounded-full focus:outline-none"
+                required
+                minLength={6}
+                disabled={isSubmitting}
+              />
+              <button
+                type="button"
+                onClick={() => setMostrarSenha((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700"
+                disabled={isSubmitting}
+              >
+                {mostrarSenha ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              </button>
+            </div>
           </div>
 
-          {/* Mensagem de erro */}
           {loginError && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-sm text-red-600 font-medium text-center">
@@ -180,16 +162,26 @@ function ModalLogin2({ onClose }: ModalLogin2Props) {
           </button>
         </form>
 
-        <p className="text-sm mt-4 text-[#1e293b]">
-          Não tem conta?{" "}
+        <div className="mt-4 space-y-2">
           <button
             type="button"
-            className="underline hover:text-[#f79009]"
-            onClick={onClose}
+            onClick={onForgotPasswordClick}
+            className="text-sm text-[#1e293b] underline hover:text-[#f79009] block w-full"
           >
-            Cadastre-se
+            Esqueci minha senha
           </button>
-        </p>
+
+          <p className="text-sm text-[#1e293b]">
+            Não tem conta?{" "}
+            <button
+              type="button"
+              onClick={onRegisterClick}
+              className="underline hover:text-[#f79009]"
+            >
+              Cadastre-se
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );
