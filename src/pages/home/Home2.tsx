@@ -16,7 +16,7 @@ import {
   atualizarProduto,
   criarProduto,
 } from "../../services/ProdutoService";
-import NavBar2 from "../../componets/navbar/NavBar2";
+import NavBar from "../../componets/navbar/NavBar";
 
 function Home2() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -269,7 +269,7 @@ function Home2() {
 
   return (
     <>
-      <NavBar2 />
+      <NavBar />
 
       <div className="container mx-auto mt-8 flex justify-end space-x-4">
         <button
