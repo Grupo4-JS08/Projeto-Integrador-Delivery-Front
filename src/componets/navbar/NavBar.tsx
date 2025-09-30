@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ModalLogin from "../usuario/modallogin/ModalLogin";
 import ModalLogin2 from "../usuario/modallogin2/ModalLogin2";
 import ModalCadastro from "../usuario/modalcadastrar/ModalCadastrar";
-import ModalRecuperarSenha from "../usuario/Modalrecuperarsenha/ModalRecuperarSenha";
+import ModalRecuperarSenha from "../usuario/modalrecuperarsenha/ModalRecuperarSenha";
+import ModalEditarUsuario from "../usuario/modaleditarusuario/ModalEditarUsuario";
 import { AuthContext } from "../../contexts/AuthContext";
 
 function Navbar() {
@@ -13,6 +14,7 @@ function Navbar() {
   const [isLogin2Open, setIsLogin2Open] = useState(false);
   const [isCadastroOpen, setIsCadastroOpen] = useState(false);
   const [isRecuperarSenhaOpen, setIsRecuperarSenhaOpen] = useState(false);
+  const [isEditarUsuarioOpen, setIsEditarUsuarioOpen] = useState(false);
   const { usuario, handleLogout } = useContext(AuthContext);
 
   const closeAllModals = () => {
@@ -20,14 +22,15 @@ function Navbar() {
     setIsLogin2Open(false);
     setIsCadastroOpen(false);
     setIsRecuperarSenhaOpen(false);
+    setIsEditarUsuarioOpen(false);
   };
 
   // Scroll lock no <body> quando algum modal está aberto
   useEffect(() => {
-    const anyOpen = isLoginOpen || isLogin2Open || isCadastroOpen || isRecuperarSenhaOpen;
+    const anyOpen = isLoginOpen || isLogin2Open || isCadastroOpen || isRecuperarSenhaOpen || isEditarUsuarioOpen;
     document.body.classList.toggle("overflow-hidden", anyOpen);
     return () => document.body.classList.remove("overflow-hidden");
-  }, [isLoginOpen, isLogin2Open, isCadastroOpen, isRecuperarSenhaOpen]);
+  }, [isLoginOpen, isLogin2Open, isCadastroOpen, isRecuperarSenhaOpen, isEditarUsuarioOpen]);
 
   // Fechar com ESC
   useEffect(() => {
@@ -62,6 +65,12 @@ function Navbar() {
     setIsRecuperarSenhaOpen(true);
   };
   const handleCloseRecuperarSenha = () => setIsRecuperarSenhaOpen(false);
+
+  const handleOpenEditarUsuario = () => {
+    closeAllModals();
+    setIsEditarUsuarioOpen(true);
+  };
+  const handleCloseEditarUsuario = () => setIsEditarUsuarioOpen(false);
 
   // Fluxos a partir do ModalLogin (passo 1)
   const handleGoToLogin2 = () => {
@@ -133,10 +142,22 @@ function Navbar() {
                 <span className="text-sm text-gray-700">
                   Olá, {usuario.nome}
                 </span>
+
+                {/* Botão Editar Perfil */}
+                <button
+                  type="button"
+                  onClick={handleOpenEditarUsuario}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-full bg-[#7E8C54] text-white font-semibold text-sm hover:opacity-90 transition"
+                >
+                  <FaEdit />
+                  <span>Editar Perfil</span>
+                </button>
+
+                {/* Botão Sair */}
                 <button
                   type="button"
                   onClick={handleLogoutClick}
-                  className="flex items-center space-x-2 px-5 py-2 rounded-full bg-[#FF9800] text-black font-semibold text-sm hover:opacity-90 transition"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-full bg-[#FF9800] text-black font-semibold text-sm hover:opacity-90 transition"
                 >
                   <FaUser />
                   <span>Sair</span>
@@ -191,6 +212,14 @@ function Navbar() {
         <ModalRecuperarSenha
           onClose={handleCloseRecuperarSenha}
           onBackToLogin={handleBackToLoginFromRecuperarSenha}
+        />
+      )}
+
+      {/* ModalEditarUsuario */}
+      {isEditarUsuarioOpen && (
+        <ModalEditarUsuario
+          onClose={handleCloseEditarUsuario}
+          usuario={usuario}
         />
       )}
     </>
