@@ -48,10 +48,11 @@ function ModalLogin2({
     setIsSubmitting(true);
     setLoginError(null);
 
+    console.log("Tentando logar com:", usuarioLogin);
+
     try {
       await handleLogin(usuarioLogin);
-      setIsSubmitting(false);
-      onClose();
+      // O redirecionamento agora acontece dentro do handleLogin
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message ||
@@ -61,7 +62,6 @@ function ModalLogin2({
       setIsSubmitting(false);
     }
   }
-
   useEffect(() => {
     const onKey = (ev: KeyboardEvent) => {
       if (ev.key === "Escape") onClose();

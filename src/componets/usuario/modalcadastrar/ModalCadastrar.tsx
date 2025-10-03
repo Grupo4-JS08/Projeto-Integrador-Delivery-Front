@@ -28,6 +28,8 @@ export default function ModalCadastro({
     cep: "",
     token: "",
     foto: "teste.jpg",
+    isMasterAdmin: false
+
   });
 
   // Função para buscar endereço pelo CEP
@@ -131,6 +133,7 @@ export default function ModalCadastro({
         cep: "",
         token: "",
         foto: "teste.jpg",
+        isMasterAdmin: false
       });
       setConfirmarSenha("");
 
@@ -239,6 +242,9 @@ export default function ModalCadastro({
           <div>
             <label className="block text-sm font-medium mb-1">
               Endereço Completo
+              <p className="text-xs text-gray-500 mt-1 ml-2">
+              Rua, Numero, Bairro, Cidade - estado
+              </p>
             </label>
             <input
               type="text"

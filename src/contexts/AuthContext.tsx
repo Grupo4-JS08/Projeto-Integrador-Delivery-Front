@@ -20,6 +20,7 @@ export const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate();
+
   const [usuario, setUsuario] = useState<Usuario>(() => {
     const usuarioSalvo = localStorage.getItem("usuario");
     if (usuarioSalvo) {
@@ -32,11 +33,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return {
       id: 0,
       nome: "",
-      email: "",
+      usuario: "",
       senha: "",
       objetivo: "geral",
       endereco: "",
       token: "",
+      foto: "",
       isMasterAdmin: false,
     };
   });
@@ -46,24 +48,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function handleLogin(usuarioLogin: UsuarioLogin) {
     setIsLoading(true);
     try {
-      return await login("/usuarios/logar", usuarioLogin, (userData: Usuario) => {
-        const usuarioCompleto = {
-          ...userData,
-          isMasterAdmin: Boolean(userData.isMasterAdmin),
-        };
-        setUsuario(usuarioCompleto);
-        setIsLoading(false);
+      const userData = await login(
+        "/usuarios/logar",
+        usuarioLogin,
+        (userData: Usuario) => {
+          const usuarioCompleto: Usuario = {
+            ...userData,
+            isMasterAdmin: Boolean(userData.isMasterAdmin),
+          };
 
-        if (usuarioCompleto.isMasterAdmin) {
-          navigate("/home2");
-        } else {
-          navigate("/home");
+          setUsuario(usuarioCompleto);
+          console.log("Login bem-sucedido:", usuarioCompleto);
+
+          // 🔹 Redirecionamento diferenciado
+          if (usuarioCompleto.isMasterAdmin) {
+            navigate("/home2"); // admin
+          } else {
+            navigate("/home"); // usuário comum
+          }
+
+          return usuarioCompleto;
         }
-        return usuarioCompleto;
-      });
+      );
+
+      return userData; // Retorna os dados do usuário
     } catch (error) {
       console.error("Erro ao fazer login:", error);
+      setIsLoading(false);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -76,11 +90,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       objetivo: "geral",
       endereco: "",
       token: "",
+      foto: "",
       isMasterAdmin: false,
     });
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
-    window.location.href = "/home";
+    navigate("/home"); // logout sempre leva para home do usuário normal
   }
 
   useEffect(() => {
@@ -91,7 +106,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [usuario]);
 
   return (
-    <AuthContext.Provider value={{ usuario, handleLogin, handleLogout, isLoading }}>
+    <AuthContext.Provider
+      value={{ usuario, handleLogin, handleLogout, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

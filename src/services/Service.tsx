@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
 import type Usuario from "../models/Usuario";
 
@@ -21,17 +22,30 @@ api.interceptors.request.use(
   }
 );
 
-export const cadastrarUsuario = async (url: string, dados: object, p0: () => void) => {
+export const cadastrarUsuario = async (
+  url: string,
+  dados: object,
+  p0: () => void
+) => {
   const resposta = await api.post(url, dados);
   return resposta.data;
 };
 
-export const login = async (url: string, dados: object, p0?: (userData: Usuario) => { isMasterAdmin: boolean; id?: number; nome: string; usuario: string; senha: string; objetivo: "emagrecer" | "hipertrofia" | "geral"; endereco: string; token: string; foto?: string; }) => {
+export const login = async (
+  url: string,
+  dados: object,
+  setDados?: (userData: Usuario) => void
+) => {
   const resposta = await api.post(url, dados);
 
   if (resposta.data.token) {
     localStorage.setItem("token", resposta.data.token);
     localStorage.setItem("usuario", JSON.stringify(resposta.data));
+
+    // Chama a callback se existir
+    if (setDados) {
+      setDados(resposta.data);
+    }
   }
 
   return resposta.data;
@@ -42,12 +56,20 @@ export const buscar = async (url: string, header: object = {}) => {
   return resposta.data;
 };
 
-export const cadastrar = async (url: string, dados: object, header: object = {}) => {
+export const cadastrar = async (
+  url: string,
+  dados: object,
+  header: object = {}
+) => {
   const resposta = await api.post(url, dados, header);
   return resposta.data;
 };
 
-export const atualizar = async (url: string, dados: object, header: object = {}) => {
+export const atualizar = async (
+  url: string,
+  dados: object,
+  header: object = {}
+) => {
   const resposta = await api.put(url, dados, header);
   return resposta.data;
 };

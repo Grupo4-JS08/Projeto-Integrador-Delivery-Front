@@ -210,19 +210,15 @@ function Home2() {
       <div className="flex justify-between p-4">
         <div className="w-1/2">
           <h3 className="font-bold text-lg">{produto.item}</h3>
-          <div className="flex items-center mb-2">
-            <br />
-            <br />
-            <button
-              onClick={() =>
-                produto.categoria && handleEditarCategoria(produto.categoria)
-              }
-              className="text-sm text-[#7E8C54] hover:text-[#6a7a48] flex items-center"
-            >
-              <FaTag className="mr-1" size={12} />
+
+          {/* Categoria - apenas texto informativo */}
+          <div className="flex items-center mb-2 mt-2">
+            <FaTag className="mr-1 text-[#7E8C54]" size={12} />
+            <span className="text-sm text-gray-600">
               {produto.categoria?.nome || "Sem categoria"}
-            </button>
+            </span>
           </div>
+
           <span className="font-bold text-gray-900 mt-2 block">
             R$ {produto.valor.toFixed(2)}
           </span>
@@ -271,6 +267,7 @@ function Home2() {
     <>
       <NavBar />
 
+      {/* Botões de Ação */}
       <div className="container mx-auto mt-8 flex justify-end space-x-4">
         <button
           onClick={() => {
@@ -299,6 +296,55 @@ function Home2() {
         </button>
       </div>
 
+      {/* Nova Seção: Lista de Categorias com Botões de Edição */}
+      <section className="container mx-auto mt-8">
+        <h2 className="text-2xl font-bold text-[#7E8C54] mb-6">Categorias</h2>
+
+        {categorias.length === 0 ? (
+          <p className="text-center text-gray-500">Nenhuma categoria cadastrada</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            {categorias.map((categoria) => (
+              <div key={categoria.id} className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center">
+                <div className="flex items-center">
+                  {categoria.foto && (
+                    <img
+                      src={categoria.foto}
+                      alt={categoria.nome}
+                      className="w-12 h-12 object-cover rounded-lg mr-3"
+                    />
+                  )}
+                  <div>
+                    <h3 className="font-semibold text-gray-800">{categoria.nome}</h3>
+                    <p className="text-sm text-gray-500 truncate max-w-xs">
+                      {categoria.descricao || "Sem descrição"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleEditarCategoria(categoria)}
+                    className="text-[#7E8C54] hover:text-[#6a7a48] transition p-2 rounded-full hover:bg-gray-100"
+                    title="Editar categoria"
+                  >
+                    <FaEdit size={16} />
+                  </button>
+                  <button
+                    onClick={() => handleExcluirCategoriaClick(categoria)}
+                    className="text-red-500 hover:text-red-700 transition p-2 rounded-full hover:bg-gray-100"
+                    title="Excluir categoria"
+                  >
+                    <FaTrash size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Seção de Produtos */}
       <section className="container mx-auto mt-12">
         <h2 className="text-2xl font-bold text-orange-500 mb-6">
           {categoriaSelecionada ? categoriaSelecionada : "Todos os Produtos"}
@@ -315,9 +361,10 @@ function Home2() {
         )}
       </section>
 
+      {/* Modal Produto - FUNDO ATUALIZADO */}
       {mostrarModalProduto && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 max-h-96 overflow-y-auto">
+        <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 max-h-96 overflow-y-auto border border-gray-200 shadow-xl">
             <h2 className="text-xl font-bold mb-4">
               {modoEdicao ? "Editar Produto" : "Novo Produto"}
             </h2>
@@ -466,13 +513,13 @@ function Home2() {
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setMostrarModalProduto(false)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSalvarProduto}
-                className="px-4 py-2 bg-[#7E8C54] text-white rounded hover:bg-[#6a7a48]"
+                className="px-4 py-2 bg-[#7E8C54] text-white rounded hover:bg-[#6a7a48] transition"
               >
                 {modoEdicao ? "Atualizar" : "Criar"} Produto
               </button>
@@ -481,9 +528,10 @@ function Home2() {
         </div>
       )}
 
+      {/* Modal Categoria - FUNDO ATUALIZADO */}
       {mostrarModalCategoria && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96">
+        <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 border border-gray-200 shadow-xl">
             <h2 className="text-xl font-bold mb-4">
               {modoEdicao ? "Editar Categoria" : "Nova Categoria"}
             </h2>
@@ -545,13 +593,13 @@ function Home2() {
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setMostrarModalCategoria(false)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSalvarCategoria}
-                className="px-4 py-2 bg-[#FF9800] text-white rounded hover:bg-[#e28200]"
+                className="px-4 py-2 bg-[#FF9800] text-white rounded hover:bg-[#e28200] transition"
               >
                 {modoEdicao ? "Atualizar" : "Criar"} Categoria
               </button>
@@ -560,9 +608,10 @@ function Home2() {
         </div>
       )}
 
+      {/* Modal Confirmação Exclusão Produto - FUNDO ATUALIZADO */}
       {produtoParaExcluir && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96">
+        <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 border border-gray-200 shadow-xl">
             <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
             <p className="mb-4">
               Tem certeza que deseja excluir o produto "
@@ -571,13 +620,13 @@ function Home2() {
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setProdutoParaExcluir(null)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConfirmarExclusaoProduto}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
               >
                 Confirmar Exclusão
               </button>
@@ -586,9 +635,10 @@ function Home2() {
         </div>
       )}
 
+      {/* Modal Confirmação Exclusão Categoria - FUNDO ATUALIZADO */}
       {categoriaParaExcluir && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96">
+        <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 border border-gray-200 shadow-xl">
             <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
             <p className="mb-4">
               Tem certeza que deseja excluir a categoria "
@@ -601,13 +651,13 @@ function Home2() {
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setCategoriaParaExcluir(null)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConfirmarExclusaoCategoria}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
               >
                 Confirmar Exclusão
               </button>

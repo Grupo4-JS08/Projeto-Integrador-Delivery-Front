@@ -121,6 +121,11 @@ function Navbar() {
 
           {/* MENU */}
           <div className="flex items-center space-x-6">
+            {usuario.token ? (
+              <div className="flex items-center space-x-3">
+                <span  className="flex items-center space-x-2 px-4 py-2  text-[#FF9800] font-semibold text-xl hover:opacity-90 transition">
+                  Olá, {usuario.nome}
+                </span>
             {/* Ofertas + Contato */}
             <div className="flex rounded-full overflow-hidden border border-gray-200">
               <Link
@@ -137,11 +142,6 @@ function Navbar() {
               </Link>
             </div>
             {/* Botão de Login/Logout */}
-            {usuario.token ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-700">
-                  Olá, {usuario.nome}
-                </span>
 
                 {/* Botão Editar Perfil */}
                 <button
