@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FaTrash, FaEdit, FaPlus, FaTag } from "react-icons/fa";
 import FooterInfo from "../../componets/footerinfo/FooterInfo";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type Produto from "../../models/Produto";
 import type Categoria from "../../models/Categoria";
 import {
@@ -17,8 +17,10 @@ import {
   criarProduto,
 } from "../../services/ProdutoService";
 import NavBar from "../../componets/navbar/NavBar";
+import { AuthContext } from "../../contexts/AuthContext";
 
 function Home2() {
+  const { usuario } = useContext(AuthContext);
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
@@ -50,6 +52,13 @@ function Home2() {
   );
   const [categoriaParaExcluir, setCategoriaParaExcluir] =
     useState<Categoria | null>(null);
+
+  // DEBUG: Verificar autenticação
+  console.log("=== DEBUG AUTENTICAÇÃO HOME2 ===");
+  console.log("Usuário:", usuario);
+  console.log("Token:", localStorage.getItem("token"));
+  console.log("isMasterAdmin:", usuario?.isMasterAdmin);
+  console.log("================================");
 
   useEffect(() => {
     async function fetchData() {
@@ -84,6 +93,8 @@ function Home2() {
     }
   }, [categoriaSelecionada, produtos]);
 
+  // --------- PRODUTO ---------
+
   const handleEditarProduto = (produto: Produto) => {
     setProdutoEditando(produto);
     setModoEdicao(true);
@@ -97,7 +108,7 @@ function Home2() {
   const handleConfirmarExclusaoProduto = async () => {
     if (produtoParaExcluir) {
       try {
-        await deletarProduto(produtoParaExcluir.id);
+        await deletarProduto(produtoParaExcluir.id); // agora DELETE /produtos/:id
         setProdutos(produtos.filter((p) => p.id !== produtoParaExcluir.id));
         setProdutosFiltrados(
           produtosFiltrados.filter((p) => p.id !== produtoParaExcluir.id)
@@ -115,7 +126,7 @@ function Home2() {
   const handleSalvarProduto = async () => {
     try {
       if (modoEdicao && produtoEditando) {
-        const produtoAtualizado = await atualizarProduto(produtoEditando);
+        const produtoAtualizado = await atualizarProduto(produtoEditando); // PUT /produtos/:id
         setProdutos(
           produtos.map((p) =>
             p.id === produtoAtualizado.id ? produtoAtualizado : p
@@ -128,7 +139,7 @@ function Home2() {
         );
         alert("Produto atualizado com sucesso!");
       } else {
-        const produtoCriado = await criarProduto(novoProduto);
+        const produtoCriado = await criarProduto(novoProduto); // POST /produtos
         setProdutos([...produtos, produtoCriado]);
         setProdutosFiltrados([...produtosFiltrados, produtoCriado]);
         alert("Produto criado com sucesso!");
@@ -140,6 +151,8 @@ function Home2() {
       alert("Erro ao salvar produto");
     }
   };
+
+  // --------- CATEGORIA ---------
 
   const handleEditarCategoria = (categoria: Categoria) => {
     setCategoriaEditando(categoria);
@@ -154,7 +167,7 @@ function Home2() {
   const handleConfirmarExclusaoCategoria = async () => {
     if (categoriaParaExcluir) {
       try {
-        await deletarCategoria(categoriaParaExcluir.id);
+        await deletarCategoria(categoriaParaExcluir.id); // agora DELETE /categorias/:id
         setCategorias(
           categorias.filter((c) => c.id !== categoriaParaExcluir.id)
         );
@@ -171,7 +184,7 @@ function Home2() {
   const handleSalvarCategoria = async () => {
     try {
       if (modoEdicao && categoriaEditando) {
-        const categoriaAtualizada = await atualizarCategoria(categoriaEditando);
+        const categoriaAtualizada = await atualizarCategoria(categoriaEditando); // PUT /categorias/:id
         setCategorias(
           categorias.map((c) =>
             c.id === categoriaAtualizada.id ? categoriaAtualizada : c
@@ -179,7 +192,7 @@ function Home2() {
         );
         alert("Categoria atualizada com sucesso!");
       } else {
-        const categoriaCriada = await criarCategoria(novaCategoria);
+        const categoriaCriada = await criarCategoria(novaCategoria); // POST /categorias
         setCategorias([...categorias, categoriaCriada]);
         alert("Categoria criada com sucesso!");
       }
@@ -197,6 +210,8 @@ function Home2() {
     setMostrarModalCategoria(true);
   };
 
+  // --------- UI ---------
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -211,7 +226,7 @@ function Home2() {
         <div className="w-1/2">
           <h3 className="font-bold text-lg">{produto.item}</h3>
 
-          {/* Categoria - apenas texto informativo */}
+          {/* Categoria */}
           <div className="flex items-center mb-2 mt-2">
             <FaTag className="mr-1 text-[#7E8C54]" size={12} />
             <span className="text-sm text-gray-600">
@@ -296,16 +311,21 @@ function Home2() {
         </button>
       </div>
 
-      {/* Nova Seção: Lista de Categorias com Botões de Edição */}
+      {/* Categorias */}
       <section className="container mx-auto mt-8">
         <h2 className="text-2xl font-bold text-[#7E8C54] mb-6">Categorias</h2>
 
         {categorias.length === 0 ? (
-          <p className="text-center text-gray-500">Nenhuma categoria cadastrada</p>
+          <p className="text-center text-gray-500">
+            Nenhuma categoria cadastrada
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {categorias.map((categoria) => (
-              <div key={categoria.id} className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center">
+              <div
+                key={categoria.id}
+                className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center"
+              >
                 <div className="flex items-center">
                   {categoria.foto && (
                     <img
@@ -315,7 +335,9 @@ function Home2() {
                     />
                   )}
                   <div>
-                    <h3 className="font-semibold text-gray-800">{categoria.nome}</h3>
+                    <h3 className="font-semibold text-gray-800">
+                      {categoria.nome}
+                    </h3>
                     <p className="text-sm text-gray-500 truncate max-w-xs">
                       {categoria.descricao || "Sem descrição"}
                     </p>
@@ -344,7 +366,7 @@ function Home2() {
         )}
       </section>
 
-      {/* Seção de Produtos */}
+      {/* Produtos */}
       <section className="container mx-auto mt-12">
         <h2 className="text-2xl font-bold text-orange-500 mb-6">
           {categoriaSelecionada ? categoriaSelecionada : "Todos os Produtos"}
@@ -360,7 +382,6 @@ function Home2() {
           </div>
         )}
       </section>
-
       {/* Modal Produto - FUNDO ATUALIZADO */}
       {mostrarModalProduto && (
         <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
