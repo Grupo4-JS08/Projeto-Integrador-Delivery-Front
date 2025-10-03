@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import ModalLogin from "../usuario/modallogin/ModalLogin";
 import ModalLogin2 from "../usuario/modallogin2/ModalLogin2";
 import ModalCadastro from "../usuario/modalcadastrar/ModalCadastrar";
-import ModalRecuperarSenha from "../usuario/modalrecuperarsenha/ModalRecuperarSenha";
+import ModalRecuperarSenha from "../usuario/Modalrecuperarsenha/ModalRecuperarSenha";
 import ModalEditarUsuario from "../usuario/modaleditarusuario/ModalEditarUsuario";
 import { AuthContext } from "../../contexts/AuthContext";
 
