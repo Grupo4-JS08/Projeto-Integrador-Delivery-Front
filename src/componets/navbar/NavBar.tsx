@@ -113,8 +113,8 @@ function Navbar() {
           {/* LOGO */}
           <Link to="/home" className="flex items-center space-x-2">
             <img
-              src="/logo.png"
-              alt="Logo DevLivery"
+              src="/LogomarcaNutriGoal.png"
+              alt="Logo NutriGoal"
               className="h-auto max-w-60"
             />
           </Link>
