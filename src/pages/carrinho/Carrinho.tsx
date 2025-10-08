@@ -69,7 +69,7 @@ export default function Carrinho() {
                   className="rounded-xl border shadow-sm flex items-center gap-4 pl-4 pr-3 bg-amber-50/60 border-amber-100"
                 >
                   <img
-                    src={item.produto.categoria?.foto || "/lanche01.jpg"}
+                    src={item.produto.categoria?.foto || "/sacola-entrega.png"}
                     alt={item.produto.item}
                     className="w-14 h-14 rounded-full object-cover ring-2 ring-amber-200"
                   />
@@ -133,7 +133,7 @@ export default function Carrinho() {
                 <div key={item.produto.id} className="flex items-start gap-3 px-4 py-3">
                   <div className="relative">
                     <img
-                      src={item.produto.categoria?.foto || "/lanche01.jpg"}
+                      src={item.produto.categoria?.foto || "/sacola-entrega.png"}
                       alt={item.produto.item}
                       className="w-12 h-12 rounded object-cover"
                     />
