@@ -35,7 +35,7 @@ function Produtos() {
               <div className="ml-4 flex flex-col items-end">
                 <div className="w-20 h-20 bg-gray-200 rounded overflow-hidden">
                   <img
-                    src="/lanche01.jpg"
+                    src="/Sacola-entrega.png"
                     alt={produto.item}
                     className="w-full h-full object-cover"
                   />
