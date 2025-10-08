@@ -54,7 +54,7 @@ const ProductCard = ({
       </div>
       <div className="relative ml-4 flex items-center">
         <img
-          src={produto.categoria?.foto || "/lanche01.jpg"}
+          src={produto.categoria?.foto || "/sacola-entrega.png"}
           alt={produto.item}
           className="w-28 h-28 object-cover rounded"
         />
@@ -309,7 +309,7 @@ function Home() {
               },
               {
                 href: "/vegan",
-                img: "/lanche01.jpg",
+                img: "/sacola-entrega.png",
                 title: "Comidas veganas",
                 discount: "-30%",
               },
