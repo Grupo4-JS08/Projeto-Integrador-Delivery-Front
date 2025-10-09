@@ -309,7 +309,7 @@ function Home() {
               },
               {
                 href: "/vegan",
-                img: "/sacola-entrega.png",
+                img: "/lanche01.jpg",
                 title: "Comidas veganas",
                 discount: "-30%",
               },
