@@ -24,7 +24,7 @@ export default function CarrinhoLista() {
             <li key={item.produto.id} className="flex items-center justify-between p-4 bg-amber-50 rounded-lg">
               <div className="flex items-center space-x-4">
                 <img
-                  src={item.produto.categoria?.foto || "/lanche01.jpg"}
+                  src={item.produto.categoria?.foto || "/Sacola-entrega.png"}
                   alt={item.produto.item}
                   className="w-16 h-16 object-cover rounded-full"
                 />
