@@ -54,7 +54,7 @@ const ProductCard = ({
       </div>
       <div className="relative ml-4 flex items-center">
         <img
-          src={produto.categoria?.foto || "/sacola-entrega.png"}
+          src={produto.categoria?.foto || "/Sacola-entrega.png"}
           alt={produto.item}
           className="w-28 h-28 object-cover rounded"
         />
