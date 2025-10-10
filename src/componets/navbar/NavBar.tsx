@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from "react";
 import { FaShoppingCart, FaUser, FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ModalLogin from "../usuario/modallogin/ModalLogin";
-import ModalLogin2 from "../usuario/modallogin2/ModalLogin2";
 import ModalCadastro from "../usuario/modalcadastrar/ModalCadastrar";
 import ModalRecuperarSenha from "../usuario/Modalrecuperarsenha/ModalRecuperarSenha";
 import ModalEditarUsuario from "../usuario/modaleditarusuario/ModalEditarUsuario";
@@ -27,10 +26,21 @@ function Navbar() {
 
   // Scroll lock no <body> quando algum modal está aberto
   useEffect(() => {
-    const anyOpen = isLoginOpen || isLogin2Open || isCadastroOpen || isRecuperarSenhaOpen || isEditarUsuarioOpen;
+    const anyOpen =
+      isLoginOpen ||
+      isLogin2Open ||
+      isCadastroOpen ||
+      isRecuperarSenhaOpen ||
+      isEditarUsuarioOpen;
     document.body.classList.toggle("overflow-hidden", anyOpen);
     return () => document.body.classList.remove("overflow-hidden");
-  }, [isLoginOpen, isLogin2Open, isCadastroOpen, isRecuperarSenhaOpen, isEditarUsuarioOpen]);
+  }, [
+    isLoginOpen,
+    isLogin2Open,
+    isCadastroOpen,
+    isRecuperarSenhaOpen,
+    isEditarUsuarioOpen,
+  ]);
 
   // Fechar com ESC
   useEffect(() => {
@@ -123,25 +133,25 @@ function Navbar() {
           <div className="flex items-center space-x-6">
             {usuario.token ? (
               <div className="flex items-center space-x-3">
-                <span  className="flex items-center space-x-2 px-4 py-2  text-[#FF9800] font-semibold text-xl hover:opacity-90 transition">
+                <span className="flex items-center space-x-2 px-4 py-2  text-[#FF9800] font-semibold text-xl hover:opacity-90 transition">
                   Olá, {usuario.nome}
                 </span>
-            {/* Ofertas + Contato */}
-            <div className="flex rounded-full overflow-hidden border border-gray-200">
-              <Link
-                to="/ofertas"
-                className="px-4 py-2 bg-[#7E8C54] text-white font-semibold text-sm hover:opacity-70 transition rounded-l-full text-center"
-              >
-                Ofertas
-              </Link>
-              <Link
-                to="/contato"
-                className="px-4 py-2 bg-[#FFF5DC] text-black font-semibold text-sm hover:opacity-70 transition rounded-r-full"
-              >
-                Contato
-              </Link>
-            </div>
-            {/* Botão de Login/Logout */}
+                {/* Ofertas + Contato */}
+                <div className="flex rounded-full overflow-hidden border border-gray-200">
+                  <Link
+                    to="/ofertas"
+                    className="px-4 py-2 bg-[#7E8C54] text-white font-semibold text-sm hover:opacity-70 transition rounded-l-full text-center"
+                  >
+                    Ofertas
+                  </Link>
+                  <Link
+                    to="/contato"
+                    className="px-4 py-2 bg-[#FFF5DC] text-black font-semibold text-sm hover:opacity-70 transition rounded-r-full"
+                  >
+                    Contato
+                  </Link>
+                </div>
+                {/* Botão de Login/Logout */}
 
                 {/* Botão Editar Perfil */}
                 <button
@@ -184,20 +194,8 @@ function Navbar() {
       <ModalLogin
         isOpen={isLoginOpen}
         onClose={handleCloseLogin}
-        onLoginClick={handleGoToLogin2}
-        onRegisterClick={handleGoToCadastro}
-        onAdminLoginClick={handleOpenLogin2}
         onForgotPasswordClick={handleOpenRecuperarSenha}
       />
-
-      {/* ModalLogin2 (form de login) */}
-      {isLogin2Open && (
-        <ModalLogin2
-          onClose={handleCloseLogin2}
-          onRegisterClick={handleGoToCadastroFromLogin2}
-          onForgotPasswordClick={handleGoToRecuperarSenhaFromLogin2}
-        />
-      )}
 
       {/* ModalCadastro */}
       {isCadastroOpen && (
