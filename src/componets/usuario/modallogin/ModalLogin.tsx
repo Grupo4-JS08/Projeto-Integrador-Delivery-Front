@@ -66,7 +66,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
 
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img src="/LogoDevLivery.png" alt="DevLivery Logo" className="w-60" />
+          <img src="/LogomarcaNutriGoal.png" alt="Nutrigoal Logo" className="w-60" />
         </div>
 
         {/* Título */}

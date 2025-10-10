@@ -163,7 +163,7 @@ export default function ModalCadastro({
         </button>
 
         <div className="mb-2">
-          <img src="/LogoDevLivery.png" alt="Logo" className="mx-auto w-60" />
+          <img src="/LogomarcaNutriGoal.png" alt="Logo" className="mx-auto w-60" />
         </div>
 
         <h2 className="text-[#f79009] font-bold text-xl mb-4">

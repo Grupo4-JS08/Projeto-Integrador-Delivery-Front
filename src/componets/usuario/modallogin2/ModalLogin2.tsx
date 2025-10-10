@@ -92,8 +92,8 @@ function ModalLogin2({
 
         <div className="mb-2">
           <img
-            src="/LogoDevLivery.png"
-            alt="Logo DevLivery"
+            src="/LogomarcaNutriGoal.png"
+            alt="Logo NutriGoal"
             className="mx-auto w-60"
           />
         </div>

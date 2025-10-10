@@ -72,8 +72,8 @@ function ModalRecuperarSenha({
 
         <div className="mb-4">
           <img
-            src="/LogoDevLivery.png"
-            alt="Logo DevLivery"
+            src="/LogomarcaNutriGoal.png"
+            alt="Logo NutriGoal"
             className="mx-auto w-48"
           />
         </div>
