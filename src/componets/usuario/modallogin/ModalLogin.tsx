@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { FaUser, FaUserPlus, FaUserShield } from "react-icons/fa";
+import { FaUser, FaUserPlus } from "react-icons/fa";
 
 export type ModalLoginProps = {
   /** controla se o modal aparece */
@@ -21,7 +21,6 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
   onClose,
   onLoginClick,
   onRegisterClick,
-  onAdminLoginClick,
   onForgotPasswordClick,
 }) => {
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -84,15 +83,6 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
           Login
         </button>
 
-        {/* Botão Login Admin */}
-        <button
-          type="button"
-          onClick={onAdminLoginClick}
-          className="flex items-center justify-center w-full bg-[#FF9800] hover:bg-[#e68900] text-white font-semibold py-3 rounded-full text-lg transition mb-4"
-        >
-          <FaUserShield className="mr-2" />
-          Login Administrador
-        </button>
 
         {/* Botão Cadastrar -> abre ModalCadastro */}
         <button
