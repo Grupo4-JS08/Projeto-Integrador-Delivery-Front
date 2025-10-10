@@ -178,7 +178,7 @@ export default function ModalEditarUsuario({
         </button>
 
         <div className="mb-4">
-          <img src="/LogoDevLivery.png" alt="Logo" className="mx-auto w-48" />
+          <img src="/LogomarcaNutriGoal.png" alt="Logo" className="mx-auto w-48" />
         </div>
 
         <h2 className="text-[#f79009] font-bold text-xl mb-4">Editar Perfil</h2>
