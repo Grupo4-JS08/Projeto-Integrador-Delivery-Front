@@ -18,7 +18,7 @@ function FooterInfo() {
 
         {/* Card por cima do mapa */}
         <div className="absolute top-25 left-6 bg-[#7E8C54] text-white p-10 rounded-lg shadow-lg w-70">
-          <h3 className="font-bold text-lg">DevLivery</h3>
+          <h3 className="font-bold text-lg">NutriGoal</h3>
           <p className="mt-2 text-sm">
             AV. Brigadeiro Faria Lima, 10 - São Paulo - SP
           </p>
