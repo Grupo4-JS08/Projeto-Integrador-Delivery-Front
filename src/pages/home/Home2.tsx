@@ -255,7 +255,7 @@ function Home2() {
         </div>
         <div className="relative w-1/2">
           <img
-            src={produto.categoria?.foto || "/sacola-entrega.png"}
+            src={produto.categoria?.foto || "/Sacola-entrega.png"}
             alt={produto.item}
             className="w-full h-auto object-cover rounded-3xl"
           />
