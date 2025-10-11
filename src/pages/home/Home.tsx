@@ -167,7 +167,6 @@ function NavBarSearch({
   );
 }
 
-
 function SearchResults({
   produtos,
   objetivo,
