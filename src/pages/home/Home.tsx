@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect, useState } from "react";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import FooterInfo from "../../componets/footerinfo/FooterInfo";
@@ -337,6 +336,123 @@ function Home() {
       {/* Produtos padrão */}
       {!searchObjective && (
         <section className="container mx-auto mt-6">
+          <div className="w-full">
+            <section className="container mx-auto mt-6">
+              <div className="relative overflow-hidden rounded-xl shadow-md text-white">
+                <img
+                  src="https://i.pinimg.com/1200x/4c/d8/c4/4cd8c4493efc8e4d6bc9992a25521d85.jpg"
+                  alt="Fundo"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[#7E8C54]/60" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 p-6">
+                  <div>
+                    <h2 className="text-4xl md:text-5xl font-extrabold text-orange-500 leading-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.65)]">
+                      Mais pedido
+                    </h2>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      <button className="px-4 py-2 bg-white text-gray-900 rounded-full text-sm shadow hover:opacity-90">
+                        Receba nossas novidades
+                      </button>
+                      <button className="px-4 py-2 bg-white text-gray-900 rounded-full text-sm shadow hover:opacity-90">
+                        Delivery em 20-25 min
+                      </button>
+                    </div>
+                  </div>
+                  <img
+                    src="https://i.pinimg.com/1200x/4c/d8/c4/4cd8c4493efc8e4d6bc9992a25521d85.jpg"
+                    alt="Prato"
+                    className="w-[420px] h-[210px] object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <section className="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                href: "/promocoes",
+                img: "/saudavel02.jpg",
+                title: "Mais promoções",
+                discount: "-20%",
+              },
+              {
+                href: "/vegan",
+                img: "/lanche01.jpg",
+                title: "Comidas veganas",
+                discount: "-30%",
+              },
+              {
+                href: "/detox",
+                img: "https://i.pinimg.com/736x/1e/3b/42/1e3b4299531ae69bf823a58d850038d7.jpg",
+                title: "Linha Detox",
+                discount: "-10%",
+              },
+            ].map((card, index) => (
+              <a
+                key={index}
+                href={card.href}
+                className="relative rounded-xl overflow-hidden shadow hover:scale-105 transition block"
+              >
+                <img
+                  src={card.img}
+                  alt={card.title}
+                  className="w-full h-56 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3">
+                  <div className="inline-block bg-black/60 backdrop-blur-[2px] rounded-lg px-3 py-2 text-white">
+                    <span className="block text-xs">
+                      {index === 0
+                        ? "Aproveite nossas promoções parceiras"
+                        : index === 1
+                          ? "Aqui você encontra"
+                          : "Sempre o melhor para você"}
+                    </span>
+                    <h3 className="mt-0.5 font-bold text-lg leading-tight">
+                      {card.title}
+                    </h3>
+                  </div>
+                </div>
+                <span className="absolute top-2 right-2 bg-[#7E8C54] text-white text-xs px-2 py-1 rounded">
+                  {card.discount}
+                </span>
+              </a>
+            ))}
+          </section>
+
+          <section className="container mx-auto mt-12">
+            <h2 className="text-2xl font-bold text-orange-500 mb-4">
+              Categorias
+            </h2>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <button
+                onClick={() => setCategoriaSelecionada("")}
+                className={`px-4 py-2 rounded-full text-sm ${
+                  categoriaSelecionada === ""
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
+              >
+                Todos
+              </button>
+              {categorias.map((categoria) => (
+                <button
+                  key={categoria.id}
+                  onClick={() => setCategoriaSelecionada(categoria.nome)}
+                  className={`px-4 py-2 rounded-full text-sm cursor-pointer ${
+                    categoriaSelecionada === categoria.nome
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-200 text-gray-800"
+                  }`}
+                >
+                  {categoria.nome}
+                </button>
+              ))}
+            </div>
+          </section>
           <h2 className="text-2xl font-bold text-orange-500 mb-6">
             {categoriaSelecionada || "Todos os Produtos"}
           </h2>
