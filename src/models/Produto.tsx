@@ -8,7 +8,7 @@ export default interface Produto {
   nome: string;
   valor: number;
   preco: number;
-  descricao: string; 
+  descricao: string;
   calorias: number;
   objetivo: "emagrecer" | "hipertrofia" | "geral";
   categoria: Categoria | null;

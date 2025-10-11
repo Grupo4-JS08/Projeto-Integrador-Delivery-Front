@@ -302,6 +302,7 @@ function Home() {
           </div>
         </div>
       )}
+      {/*  Alerta de sucesso fixo no topo */}
       {mensagemSucesso && (
         <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-lg">
