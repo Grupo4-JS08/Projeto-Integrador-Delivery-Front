@@ -235,7 +235,7 @@ function Home2() {
           </div>
 
           <span className="font-bold text-gray-900 mt-2 block">
-            R$ {produto.valor.toFixed(2)}
+            R$ {Number(produto.valor ?? 0).toFixed(2)}
           </span>
           <span className="text-xs text-gray-500">
             {produto.calorias} calorias
