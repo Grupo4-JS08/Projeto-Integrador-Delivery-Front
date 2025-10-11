@@ -2,7 +2,7 @@ import type Categoria from "../models/Categoria";
 import type Produto from "../models/Produto";
 import api from "./Service";
 
-function normalizarPreco(produto: Partial<Produto>): Partial<Produto> {
+export function normalizarPreco(produto: Partial<Produto>): Partial<Produto> {
   return {
     ...produto,
     // Garante que valor e preco sejam números válidos com ponto
