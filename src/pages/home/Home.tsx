@@ -19,17 +19,17 @@ const ProductCard = ({
   adicionar,
   mostrarMensagem,
   isAuthenticated,
-  onUnauthorized,
+  mostrarMensagemErro,
 }: {
   produto: Produto;
   adicionar: (id: number) => void;
   mostrarMensagem: (msg: string) => void;
   isAuthenticated: boolean;
-  onUnauthorized: () => void;
+  mostrarMensagemErro: () => void;
 }) => {
   const handleAddToCart = () => {
     if (!isAuthenticated) {
-      onUnauthorized();
+      mostrarMensagemErro();
       return;
     }
 
@@ -58,8 +58,8 @@ const ProductCard = ({
                 produto.objetivo === "emagrecer"
                   ? "text-green-600"
                   : produto.objetivo === "hipertrofia"
-                  ? "text-blue-600"
-                  : "text-orange-600"
+                    ? "text-blue-600"
+                    : "text-orange-600"
               }`}
             >
               {produto.objetivo}
@@ -173,14 +173,14 @@ function SearchResults({
   adicionar,
   mostrarMensagem,
   isAuthenticated,
-  onUnauthorized,
+  mostrarMensagemErro,
 }: {
   produtos: Produto[];
   objetivo: string;
   adicionar: (id: number) => void;
   mostrarMensagem: (msg: string) => void;
   isAuthenticated: boolean;
-  onUnauthorized: () => void;
+  mostrarMensagemErro: () => void;
 }) {
   if (!objetivo) return null;
 
@@ -202,7 +202,7 @@ function SearchResults({
               adicionar={adicionar}
               mostrarMensagem={mostrarMensagem}
               isAuthenticated={isAuthenticated}
-              onUnauthorized={onUnauthorized}
+              mostrarMensagemErro={mostrarMensagemErro}
             />
           ))}
         </div>
@@ -222,11 +222,17 @@ function Home() {
   const { adicionar } = useContext(CarrinhoContext);
   const [mensagemSucesso, setMensagemSucesso] = useState<string | null>(null);
   const { usuario } = useContext(AuthContext);
+  const [mensagemErro, setMensagemErro] = useState<string | null>(null);
 
   // Função de mensagem temporária
   function mostrarMensagem(mensagem: string) {
     setMensagemSucesso(mensagem);
     setTimeout(() => setMensagemSucesso(null), 3000);
+  }
+
+  function mostrarMensagemErro(mensagem: string) {
+    setMensagemErro(mensagem);
+    setTimeout(() => setMensagemErro(null), 3000);
   }
 
   useEffect(() => {
@@ -271,7 +277,9 @@ function Home() {
   const isAuthenticated = !!usuario?.token;
 
   const handleUnauthorized = () => {
-    alert("Você precisa estar logado para adicionar produtos ao carrinho.");
+    mostrarMensagemErro(
+      "Você precisa estar logado para adicionar produtos ao carrinho."
+    );
   };
 
   if (loading) {
@@ -284,7 +292,17 @@ function Home() {
 
   return (
     <>
-      {/* ✅ Alerta de sucesso fixo no topo */}
+      {/* Alerta de erro fixo no topo */}
+      {mensagemErro && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg shadow-lg">
+            <p className="text-sm text-red-600 font-medium text-center">
+              {mensagemErro}
+            </p>
+          </div>
+        </div>
+      )}
+      {/*  Alerta de sucesso fixo no topo */}
       {mensagemSucesso && (
         <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-lg">
@@ -312,7 +330,7 @@ function Home() {
           adicionar={adicionar}
           mostrarMensagem={mostrarMensagem}
           isAuthenticated={isAuthenticated}
-          onUnauthorized={handleUnauthorized}
+          mostrarMensagemErro={handleUnauthorized}
         />
       )}
 
@@ -335,7 +353,7 @@ function Home() {
                   adicionar={adicionar}
                   mostrarMensagem={mostrarMensagem}
                   isAuthenticated={isAuthenticated}
-                  onUnauthorized={handleUnauthorized}
+                  mostrarMensagemErro={handleUnauthorized}
                 />
               ))}
             </div>
