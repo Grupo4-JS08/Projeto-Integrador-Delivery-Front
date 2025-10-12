@@ -4,13 +4,24 @@ import { ShoppingCart, Truck, Store, Plus, Minus, X, Tag } from "lucide-react";
 
 const DELIVERY_FEE = 9.9;
 
+function formatarPreco(valor: unknown): string {
+  return typeof valor === "number" && !isNaN(valor)
+    ? `R$ ${valor.toFixed(2)}`
+    : "Indisponível";
+}
+
 export default function Carrinho() {
-  const { itens, alterarQuantidade, remover, carregando } = useContext(CarrinhoContext);
+  const { itens, alterarQuantidade, remover, carregando } =
+    useContext(CarrinhoContext);
   const [cupom, setCupom] = useState("");
   const [cupomAplicado, setCupomAplicado] = useState<string | null>(null);
 
   const subtotal = useMemo(
-    () => itens.reduce((acc, item) => acc + item.produto.valor * item.quantidade, 0),
+    () =>
+      itens.reduce(
+        (acc, item) => acc + item.produto.valor * item.quantidade,
+        0
+      ),
     [itens]
   );
 
@@ -24,14 +35,14 @@ export default function Carrinho() {
   const total = Math.max(0, subtotal - desconto + DELIVERY_FEE);
 
   function aumentarQuantidade(id: number) {
-    const item = itens.find(item => item.produto.id === id);
+    const item = itens.find((item) => item.produto.id === id);
     if (item) {
       alterarQuantidade(id, item.quantidade + 1);
     }
   }
 
   function diminuirQuantidade(id: number) {
-    const item = itens.find(item => item.produto.id === id);
+    const item = itens.find((item) => item.produto.id === id);
     if (item) {
       if (item.quantidade > 1) {
         alterarQuantidade(id, item.quantidade - 1);
@@ -57,11 +68,15 @@ export default function Carrinho() {
     <main className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-6">
         <section>
-          <h1 className="text-lg font-semibold text-gray-900 mb-4">Descrição do pedido</h1>
+          <h1 className="text-lg font-semibold text-gray-900 mb-4">
+            Descrição do pedido
+          </h1>
 
           <div className="space-y-4">
             {itens.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">Seu carrinho está vazio</p>
+              <p className="text-center text-gray-500 py-8">
+                Seu carrinho está vazio
+              </p>
             ) : (
               itens.map((item) => (
                 <div
@@ -78,8 +93,12 @@ export default function Carrinho() {
                     <div className="flex items-center gap-4 w-full min-w-0 py-4">
                       <div className="h-5 w-[1px] bg-gray-400/40" />
                       <div className="flex-1 min-w-0">
-                        <div className="truncate font-semibold">{item.produto.item}</div>
-                        <div className="mt-1 text-sm text-gray-500">R$ {item.produto.valor.toFixed(2)}</div>
+                        <div className="truncate font-semibold">
+                          {item.produto.item}
+                        </div>
+                        <div className="mt-1 text-sm text-gray-500">
+                          {formatarPreco(item.produto.valor)}
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -127,13 +146,20 @@ export default function Carrinho() {
 
           <div className="divide-y">
             {itens.length === 0 ? (
-              <p className="text-center text-gray-500 p-4">Seu carrinho está vazio</p>
+              <p className="text-center text-gray-500 p-4">
+                Seu carrinho está vazio
+              </p>
             ) : (
               itens.map((item) => (
-                <div key={item.produto.id} className="flex items-start gap-3 px-4 py-3">
+                <div
+                  key={item.produto.id}
+                  className="flex items-start gap-3 px-4 py-3"
+                >
                   <div className="relative">
                     <img
-                      src={item.produto.categoria?.foto || "/Sacola-entrega.png"}
+                      src={
+                        item.produto.categoria?.foto || "/Sacola-entrega.png"
+                      }
                       alt={item.produto.item}
                       className="w-12 h-12 rounded object-cover"
                     />
@@ -146,12 +172,16 @@ export default function Carrinho() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="truncate font-semibold text-sm">{item.produto.item}</div>
+                      <div className="truncate font-semibold text-sm">
+                        {item.produto.item}
+                      </div>
                       <div className="text-sm font-medium text-gray-700">
-                        R$ {(item.produto.valor * item.quantidade).toFixed(2)}
+                        {formatarPreco(item.produto.valor * item.quantidade)}
                       </div>
                     </div>
-                    <div className="text-[12px] text-gray-500">{item.produto.calorias} calorias</div>
+                    <div className="text-[12px] text-gray-500">
+                      {item.produto.calorias} calorias
+                    </div>
                   </div>
 
                   <button
@@ -169,28 +199,31 @@ export default function Carrinho() {
           <div className="px-4 py-3 space-y-2 bg-amber-50/50">
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Sub Total:</span>
-              <span className="font-semibold text-gray-800">R$ {subtotal.toFixed(2)}</span>
+              <span className="font-semibold text-gray-800">{formatarPreco(subtotal)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Desconto:</span>
-              <span className="font-semibold text-rose-600">- R$ {desconto.toFixed(2)}</span>
+              <span className="font-semibold text-rose-600">- {formatarPreco(desconto)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Taxa de Entrega:</span>
-              <span className="font-semibold text-gray-800">R$ {DELIVERY_FEE.toFixed(2)}</span>
+              <span className="font-semibold text-gray-800">{formatarPreco(DELIVERY_FEE)}</span>
             </div>
 
             <div className="mt-2">
               <button className="w-full inline-flex items-center justify-between bg-orange-500 text-white font-bold rounded-lg px-4 py-3 shadow hover:bg-orange-600">
                 <span>Valor total</span>
-                <span className="text-lg">R$ {total.toFixed(2)}</span>
+                <span className="text-lg">{formatarPreco(total)}</span>
               </button>
             </div>
 
             <div className="mt-3">
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
-                  <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Tag
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="text"
                     placeholder="Cupom de desconto"
