@@ -7,7 +7,7 @@ const DELIVERY_FEE = 9.9;
 function formatarPreco(valor: unknown): string {
   return typeof valor === "number" && !isNaN(valor)
     ? `R$ ${valor.toFixed(2)}`
-    : "Indisponível";
+    : "Disponível";
 }
 
 export default function Carrinho() {
